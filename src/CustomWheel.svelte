@@ -5,9 +5,19 @@
   let offset = 0
   let dragging = false;
 
+
+  let onMouseDown = () => {}
+
 </script>
 
 
 <style>
 
 </style>
+
+
+<div class='dragdealer year' on:mouseDown={onMouseDown} on:touchStart={onMouseDown}>
+  <ul class='handle'>
+    
+  </ul>
+</div>
