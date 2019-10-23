@@ -1,6 +1,6 @@
 <script>
 
-  import { ItemWheel } from 'ItemWheel.svelte';
+  import { ItemWheel } from './index.js';
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
   const YEARS = new Array(201).fill(1900).map((value, index) => value + index);
