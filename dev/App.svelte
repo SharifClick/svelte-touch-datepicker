@@ -22,10 +22,20 @@
     overflow: hidden;
     font-size: 12px;
   }
+
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font: 16px 'Roboto', sans-serif;
+  }
   
 </style>
 
 <div class="container" >
-  <DatePicker />
+  <div class="center">
+    <DatePicker />
+  </div>
 </div>
 
