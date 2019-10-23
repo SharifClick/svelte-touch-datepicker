@@ -25,7 +25,7 @@
     }
   });
 
-  onMouseDown = (event) => {
+  let onMouseDown = (event) => {
     previousY = event.touches ? event.touches[0].clientY : event.clientY;
     dragging = true;
     
@@ -35,7 +35,7 @@
     document.addEventListener('touchend', onMouseUp)
   }
 
-   onMouseMove = (event) => {
+   let onMouseMove = (event) => {
     let clientY = event.touches ? event.touches[0].clientY : event.clientY;
 
     offset = clientY - previousY
@@ -48,7 +48,7 @@
     previousY = event.touches ? event.touches[0].clientY : event.clientY;
   }
 
-  onMouseUp = () => {
+  let onMouseUp = () => {
     // calculate closeset snap
     let maxPosition = -(data.length - 1) * 50;
     let rounderPosition = Math.round((position + offset * 5) / 50) * 50;
