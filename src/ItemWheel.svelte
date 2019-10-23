@@ -1,6 +1,6 @@
 <script>
 
-  import { afterUpdate } from 'svelte';
+  import { ItemWheel } from 'ItemWheel.svelte';
   
   export let selected = 0;
   export let data = 0;
