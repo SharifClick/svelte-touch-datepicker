@@ -23,7 +23,17 @@
     }
   });
 
-  let onMouseDown = () => {}
+  onMouseDown = (event) => {
+    previousY = event.touches ? event.touches[0].clientY : event.clientY;
+    dragging = true;
+    
+    document.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseup', onMouseUp)
+    document.addEventListener('touchmove', onMouseMove)
+    document.addEventListener('touchend', onMouseUp)
+  }
+
+  
 
 </script>
 
