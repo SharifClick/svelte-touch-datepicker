@@ -1,19 +1,19 @@
 <script>
 
   import { afterUpdate } from 'svelte';
-  
+
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
   const YEARS = new Array(201).fill(1900).map((value, index) => value + index);
 
 
   let date = new Date();
 
-  resetDate = () => {
+  let resetDate = () => {
     date = new Date();
   }
   $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((value, index) => value + index)
 
-  dateChanged = (type, changedData) => {
+  let dateChanged = (type, changedData) => {
     let newDate
     
     if (type === 'day') {
@@ -128,4 +128,9 @@
 
   
 </style>
+
+
+<div class='date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
+    
+<button class='reset' on:click={resetDate}>Reset Date</button>
 
