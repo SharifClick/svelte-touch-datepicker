@@ -47,6 +47,23 @@
 
     previousY = event.touches ? event.touches[0].clientY : event.clientY;
   }
+
+  onMouseUp = () => {
+    // calculate closeset snap
+    let maxPosition = -(data.length - 1) * 50;
+    let rounderPosition = Math.round((position + offset * 5) / 50) * 50;
+    let finalPosition = Math.max(maxPosition, Math.min(0, rounderPosition));
+    
+    dragging = false;
+    position = finalPosition;
+    
+    document.removeEventListener('mousemove', onMouseMove)
+    document.removeEventListener('mouseup', onMouseUp)
+    document.removeEventListener('touchmove', onMouseMove)
+    document.removeEventListener('touchend', onMouseUp)
+    
+    // this.props.onDateChange(this.props.type, -finalPosition / 50)
+  }
   
 
 </script>
