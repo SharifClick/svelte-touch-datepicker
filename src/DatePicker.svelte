@@ -42,28 +42,19 @@
 </script>
 
 <style>
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  font: 16px 'Roboto', sans-serif;
-  -webkit-transform: scale(1.3);
-          transform: scale(1.3);
-}
-.center .date {
+.date {
   font-size: 30px;
   font-weight: 300;
 }
-.center .date-picker {
+.date-picker {
   display: flex;
   padding: 50px 20px;
   margin: 30px 0;
   overflow: hidden;
 }
-.center .day,
-.center .month,
-.center .year {
+.day,
+.month,
+.year {
   position: relative;
   height: 50px;
   margin: 0 10px;
@@ -71,12 +62,12 @@
   border-bottom: 1px solid #0522f3;
   border-radius: 0;
 }
-.center .day:before,
-.center .month:before,
-.center .year:before,
-.center .day:after,
-.center .month:after,
-.center .year:after {
+.day:before,
+.month:before,
+.year:before,
+.day:after,
+.month:after,
+.year:after {
   content: '';
   position: absolute;
   left: 0;
@@ -87,19 +78,19 @@
   pointer-events: none;
   z-index: 1;
 }
-.center .day:before,
-.center .month:before,
-.center .year:before {
+.day:before,
+.month:before,
+.year:before {
   top: -51px;
 }
-.center .day:after,
-.center .month:after,
-.center .year:after {
+.day:after,
+.month:after,
+.year:after {
   bottom: -51px;
 }
-.center .day li,
-.center .month li,
-.center .year li {
+.day li,
+.month li,
+.year li {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -110,7 +101,7 @@
       -ms-user-select: none;
           user-select: none;
 }
-.center .reset {
+.reset {
   width: 100px;
   height: 30px;
   border-radius: 15px;
@@ -121,7 +112,7 @@
   box-shadow: 0 1px 10px -2px #2466fb;
   font-weight: 300;
 }
-.center .reset:active {
+.reset:active {
   -webkit-transform: scale(0.95);
           transform: scale(0.95);
 }
@@ -131,7 +122,7 @@
 
 
 <div class='date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
-  <div className='date-picker'>
+  <div class='date-picker'>
       <ItemWheel type='day' data={DAYS} selected={date.getDate()} onDateChange={dateChanged}/>
       <ItemWheel type='month' data={MONTHS} selected={date.getMonth() + 1} onDateChange={dateChanged}/>
       <ItemWheel type='year' data={YEARS} selected={date.getYear() + 1} onDateChange={dateChanged}/>
