@@ -1,5 +1,40 @@
 <script>
 
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
+  const YEARS = new Array(201).fill(1900).map((value, index) => value + index);
+
+  let date = new Date();
+
+  resetDate = () => {
+    date = new Date();
+  }
+
+  dateChanged = (type, changedData) => {
+    let newDate
+    
+    if (type === 'day') {
+    
+      newDate = new Date(date.getFullYear(), date.getMonth(), changedData + 1)
+    
+    } else if (type === 'month') {
+      
+      let maxDayInSelectedMonth = new Date(date.getFullYear(), changedData + 1, 0).getDate()
+      let day = Math.min(date.getDate(), maxDayInSelectedMonth)
+      
+      newDate = new Date(date.getFullYear(), changedData, day)
+    
+    } else if (type === 'year') {
+      
+      let maxDayInSelectedMonth = new Date(1900 + changedData, date.getMonth() + 1, 0).getDate()
+      let day = Math.min(date.getDate(), maxDayInSelectedMonth)
+     
+      newDate = new Date(1900 + changedData, date.getMonth(), day)
+    
+    }
+
+    // onDateChange(newDate)
+  }
+  
 </script>
 
 <style>
