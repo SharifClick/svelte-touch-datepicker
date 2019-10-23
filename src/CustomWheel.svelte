@@ -3,6 +3,8 @@
   import { afterUpdate } from 'svelte';
   
   export let selected = 0;
+  export let data = 0;
+
   let position = selected ? -(selected - 1) * 50 : 0;
   let offset = 0;
   let dragging = false;
@@ -33,6 +35,18 @@
     document.addEventListener('touchend', onMouseUp)
   }
 
+   onMouseMove = (event) => {
+    let clientY = event.touches ? event.touches[0].clientY : event.clientY;
+
+    offset = clientY - previousY
+    
+    let maxPosition = -data.length * 50
+    let _position = position + offset
+    
+    position = Math.max(maxPosition, Math.min(50, _position))
+
+    previousY = event.touches ? event.touches[0].clientY : event.clientY;
+  }
   
 
 </script>
