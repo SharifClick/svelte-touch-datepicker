@@ -1,6 +1,6 @@
 <script>
 
-  import { afterUpdate } from 'svelte';
+  import { ItemWheel } from 'ItemWheel.svelte';
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
   const YEARS = new Array(201).fill(1900).map((value, index) => value + index);
@@ -131,6 +131,10 @@
 
 
 <div class='date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
-    
+  <div className='date-picker'>
+      <ItemWheel type='day' data={DAYS} selected={date.getDate()} onDateChange={dateChanged}/>
+      <ItemWheel type='month' data={MONTHS} selected={date.getMonth() + 1} onDateChange={dateChanged}/>
+      <ItemWheel type='year' data={YEARS} selected={date.getYear() + 1} onDateChange={dateChanged}/>
+  </div>
 <button class='reset' on:click={resetDate}>Reset Date</button>
 
