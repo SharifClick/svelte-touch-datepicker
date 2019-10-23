@@ -15,7 +15,8 @@
       will-change: 'transform';
       transition: transform ${Math.abs(offset) / 100 + 0.1}s;
       transform: translateY(${position}px)
-  `
+  `;
+ 
 
   afterUpdate(() => {
 		let selectedPosition = -(selected - 1) * 50
@@ -23,6 +24,8 @@
     if (!dragging && position !== selectedPosition) {
         position: selectedPosition
     }
+
+    itemWrapper.style.cssText = itemPosition;
   });
 
   let onMouseDown = (event) => {
@@ -75,7 +78,7 @@
 
 
 <div class='year' on:mouseDown={onMouseDown} on:touchStart={onMouseDown}>
-  <ul bind:this={itemWrapper}>
+  <ul bind:this={itemWrapper} >
    {#each data as item }
      <li>{item}</li>
    {/each}
