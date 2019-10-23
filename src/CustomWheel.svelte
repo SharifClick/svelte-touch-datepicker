@@ -1,5 +1,7 @@
 <script>
 
+  import { afterUpdate } from 'svelte';
+  
   export let selected = 0;
   let position = selected ? -(selected - 1) * 50 : 0 }
   let offset = 0
@@ -13,6 +15,13 @@
       transform: translateY(${position}px)
   `
 
+  afterUpdate(() => {
+		let selectedPosition = -(selected - 1) * 50
+    
+    if (!dragging && position !== selectedPosition) {
+        position: selectedPosition
+    }
+  });
 
   let onMouseDown = () => {}
 
