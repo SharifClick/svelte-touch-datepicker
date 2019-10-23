@@ -5,6 +5,14 @@
   let offset = 0
   let dragging = false;
 
+  let itemWrapper;
+
+  let itemPosition = `
+      will-change: 'transform';
+      transition: transform ${Math.abs(offset) / 100 + 0.1}s;
+      transform: translateY(${position}px)
+  `
+
 
   let onMouseDown = () => {}
 
@@ -16,8 +24,8 @@
 </style>
 
 
-<div class='dragdealer year' on:mouseDown={onMouseDown} on:touchStart={onMouseDown}>
-  <ul class='handle'>
+<div class='year' on:mouseDown={onMouseDown} on:touchStart={onMouseDown}>
+  <ul bind:this={itemWrapper}>
     
   </ul>
 </div>
