@@ -83,6 +83,20 @@ var app = (function () {
     function afterUpdate(fn) {
         get_current_component().$$.after_update.push(fn);
     }
+    function createEventDispatcher() {
+        const component = current_component;
+        return (type, detail) => {
+            const callbacks = component.$$.callbacks[type];
+            if (callbacks) {
+                // TODO are there situations where events could be dispatched
+                // in a server (non-DOM) environment?
+                const event = custom_event(type, detail);
+                callbacks.slice().forEach(fn => {
+                    fn.call(component, event);
+                });
+            }
+        };
+    }
 
     const dirty_components = [];
     const binding_callbacks = [];
@@ -342,30 +356,31 @@ var app = (function () {
     		type: "day",
     		data: ctx.DAYS,
     		selected: ctx.date.getDate(),
-    		onDateChange: ctx.dateChanged
+    		"}": true
     	},
     		$$inline: true
     	});
+    	itemwheel0.$on("dateChange", ctx.dateChanged);
 
     	var itemwheel1 = new ItemWheel({
     		props: {
     		type: "month",
     		data: ctx.MONTHS,
-    		selected: ctx.date.getMonth() + 1,
-    		onDateChange: ctx.dateChanged
+    		selected: ctx.date.getMonth() + 1
     	},
     		$$inline: true
     	});
+    	itemwheel1.$on("dateChange", ctx.dateChanged);
 
     	var itemwheel2 = new ItemWheel({
     		props: {
     		type: "year",
     		data: ctx.YEARS,
-    		selected: ctx.date.getYear() + 1,
-    		onDateChange: ctx.dateChanged
+    		selected: ctx.date.getYear() + 1
     	},
     		$$inline: true
     	});
+    	itemwheel2.$on("dateChange", ctx.dateChanged);
 
     	const block = {
     		c: function create() {
@@ -386,11 +401,11 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Reset Date";
     			attr_dev(div0, "class", "date svelte-1a9a205");
-    			add_location(div0, file, 75, 0, 1771);
+    			add_location(div0, file, 83, 0, 1878);
     			attr_dev(div1, "class", "date-picker svelte-1a9a205");
-    			add_location(div1, file, 76, 2, 1868);
+    			add_location(div1, file, 84, 2, 1975);
     			attr_dev(button, "class", "reset svelte-1a9a205");
-    			add_location(button, file, 81, 0, 2208);
+    			add_location(button, file, 89, 0, 2320);
     			dispose = listen_dev(button, "click", ctx.resetDate);
     		},
 
@@ -498,7 +513,13 @@ var app = (function () {
         $$invalidate('date', date = new Date());
       };
 
-      let dateChanged = (type, changedData) => {
+      let setChangedDate = (newDate) => {
+        $$invalidate('date', date = newDate);
+      };
+
+      let dateChanged = (event) => {
+
+        let {type, changedData} = event.detail;
         let newDate;
         
         if (type === 'day') {
@@ -521,7 +542,7 @@ var app = (function () {
         
         }
 
-        // onDateChange(newDate)
+        setChangedDate(newDate);
       };
 
     	$$self.$capture_state = () => {
@@ -531,6 +552,7 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('date' in $$props) $$invalidate('date', date = $$props.date);
     		if ('resetDate' in $$props) $$invalidate('resetDate', resetDate = $$props.resetDate);
+    		if ('setChangedDate' in $$props) setChangedDate = $$props.setChangedDate;
     		if ('dateChanged' in $$props) $$invalidate('dateChanged', dateChanged = $$props.dateChanged);
     		if ('DAYS' in $$props) $$invalidate('DAYS', DAYS = $$props.DAYS);
     	};
@@ -570,7 +592,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (146:3) {#each data as item }
+    // (153:3) {#each data as item }
     function create_each_block(ctx) {
     	var li, t_value = ctx.item + "", t;
 
@@ -579,7 +601,7 @@ var app = (function () {
     			li = element("li");
     			t = text(t_value);
     			attr_dev(li, "class", "svelte-1f6ediz");
-    			add_location(li, file$1, 146, 5, 3269);
+    			add_location(li, file$1, 153, 5, 3412);
     		},
 
     		m: function mount(target, anchor) {
@@ -599,7 +621,7 @@ var app = (function () {
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(146:3) {#each data as item }", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(153:3) {#each data as item }", ctx });
     	return block;
     }
 
@@ -623,9 +645,9 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr_dev(ul, "class", "item-container svelte-1f6ediz");
-    			add_location(ul, file$1, 144, 2, 3185);
+    			add_location(ul, file$1, 151, 2, 3328);
     			attr_dev(div, "class", "item-wrapper svelte-1f6ediz");
-    			add_location(div, file$1, 143, 0, 3100);
+    			add_location(div, file$1, 150, 0, 3243);
 
     			dispose = [
     				listen_dev(div, "mousedown", ctx.onMouseDown),
@@ -691,7 +713,9 @@ var app = (function () {
     }
 
     function instance$1($$self, $$props, $$invalidate) {
-    	let { selected, data = 0 } = $$props;
+    	const dispatch = createEventDispatcher();
+      
+      let { selected, data = 0 } = $$props;
 
       let position = selected ? -(selected - 1) * 50 : 0;
 
@@ -701,7 +725,6 @@ var app = (function () {
 
       let itemWrapper, previousY;
 
-      let { onDateChange = () => {} } = $$props;
       let { type } = $$props;
 
       onMount(() => {
@@ -717,6 +740,12 @@ var app = (function () {
       });
 
 
+      function onDateChange(type, changedData) {
+    		dispatch('dateChange', {
+    			type, changedData
+    		});
+      }
+      
       function setPosition(){
          let itemPosition = `
       will-change: 'transform';
@@ -771,7 +800,7 @@ var app = (function () {
         onDateChange(type, -finalPosition / 50);
       };
 
-    	const writable_props = ['selected', 'data', 'onDateChange', 'type'];
+    	const writable_props = ['selected', 'data', 'type'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key) && !key.startsWith('$$')) console_1.warn(`<ItemWheel> was created with unknown prop '${key}'`);
     	});
@@ -785,12 +814,11 @@ var app = (function () {
     	$$self.$set = $$props => {
     		if ('selected' in $$props) $$invalidate('selected', selected = $$props.selected);
     		if ('data' in $$props) $$invalidate('data', data = $$props.data);
-    		if ('onDateChange' in $$props) $$invalidate('onDateChange', onDateChange = $$props.onDateChange);
     		if ('type' in $$props) $$invalidate('type', type = $$props.type);
     	};
 
     	$$self.$capture_state = () => {
-    		return { selected, data, position, offset, dragging, itemWrapper, previousY, onDateChange, type, onMouseDown, onMouseMove, onMouseUp };
+    		return { selected, data, position, offset, dragging, itemWrapper, previousY, type, onMouseDown, onMouseMove, onMouseUp };
     	};
 
     	$$self.$inject_state = $$props => {
@@ -801,7 +829,6 @@ var app = (function () {
     		if ('dragging' in $$props) dragging = $$props.dragging;
     		if ('itemWrapper' in $$props) $$invalidate('itemWrapper', itemWrapper = $$props.itemWrapper);
     		if ('previousY' in $$props) previousY = $$props.previousY;
-    		if ('onDateChange' in $$props) $$invalidate('onDateChange', onDateChange = $$props.onDateChange);
     		if ('type' in $$props) $$invalidate('type', type = $$props.type);
     		if ('onMouseDown' in $$props) $$invalidate('onMouseDown', onMouseDown = $$props.onMouseDown);
     		if ('onMouseMove' in $$props) onMouseMove = $$props.onMouseMove;
@@ -812,7 +839,6 @@ var app = (function () {
     		selected,
     		data,
     		itemWrapper,
-    		onDateChange,
     		type,
     		onMouseDown,
     		ul_binding
@@ -822,7 +848,7 @@ var app = (function () {
     class ItemWheel extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["selected", "data", "onDateChange", "type"]);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["selected", "data", "type"]);
     		dispatch_dev("SvelteRegisterComponent", { component: this, tagName: "ItemWheel", options, id: create_fragment$1.name });
 
     		const { ctx } = this.$$;
@@ -848,14 +874,6 @@ var app = (function () {
     	}
 
     	set data(value) {
-    		throw new Error("<ItemWheel>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get onDateChange() {
-    		throw new Error("<ItemWheel>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set onDateChange(value) {
     		throw new Error("<ItemWheel>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
