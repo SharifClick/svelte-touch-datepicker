@@ -81,7 +81,9 @@
     window.removeEventListener('mousemove', onMouseMove)
     window.removeEventListener('mouseup', onMouseUp)
     window.removeEventListener('touchmove', onMouseMove)
-    window.removeEventListener('touchend', onMouseUp)
+    window.removeEventListener('touchend', onMouseUp);
+
+    setPosition();
     
     onDateChange(type, -finalPosition / 50)
   }
