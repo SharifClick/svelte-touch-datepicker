@@ -1,6 +1,8 @@
 <script>
 
-  import { afterUpdate, onMount } from 'svelte';
+  import { afterUpdate, onMount, createEventDispatcher } from 'svelte';
+
+  const dispatch = createEventDispatcher();
   
   export let selected;
   export let data = 0;
@@ -13,7 +15,6 @@
 
   let itemWrapper, previousY;
 
-  export let onDateChange = () => {};
   export let type;
 
   onMount(() => {
@@ -34,6 +35,12 @@
   });
 
 
+  function onDateChange(type, changedData) {
+		dispatch('dateChange', {
+			type, changedData
+		});
+  }
+  
   function setPosition(){
      let itemPosition = `
       will-change: 'transform';

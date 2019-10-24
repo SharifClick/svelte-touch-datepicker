@@ -1,6 +1,7 @@
 <script>
-
+  
   import { ItemWheel } from './index.js';
+
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
   const YEARS = new Array(201).fill(1900).map((value, index) => value + index);
@@ -11,9 +12,16 @@
   let resetDate = () => {
     date = new Date();
   }
+
+  let setChangedDate = (newDate) => {
+    date = newDate;
+  }
+
   $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((value, index) => value + index)
 
-  let dateChanged = (type, changedData) => {
+  let dateChanged = (event) => {
+
+    let {type, changedData} = event.detail;
     let newDate
     
     if (type === 'day') {
@@ -36,7 +44,7 @@
     
     }
 
-    // onDateChange(newDate)
+    setChangedDate(newDate)
   }
   
 </script>
@@ -75,9 +83,9 @@
 
 <div class='date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
   <div class='date-picker'>
-      <ItemWheel type='day' data={DAYS} selected={date.getDate()} onDateChange={dateChanged}/>
-      <ItemWheel type='month' data={MONTHS} selected={date.getMonth() + 1} onDateChange={dateChanged}/>
-      <ItemWheel type='year' data={YEARS} selected={date.getYear() + 1} onDateChange={dateChanged}/>
+      <ItemWheel type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
+      <ItemWheel type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
+      <ItemWheel type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
   </div>
 <button class='reset' on:click={resetDate}>Reset Date</button>
 
