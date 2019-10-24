@@ -77,7 +77,7 @@
 </style>
 
 
-<div class='year' on:mouseDown={onMouseDown} on:touchStart={onMouseDown}>
+<div class='year' on:mousedown={onMouseDown} on:touchstart={onMouseDown}>
   <ul bind:this={itemWrapper} >
    {#each data as item }
      <li>{item}</li>
