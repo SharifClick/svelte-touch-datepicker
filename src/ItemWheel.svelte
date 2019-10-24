@@ -86,6 +86,10 @@
   border-bottom: 1px solid #0522f3;
   border-radius: 0;
 }
+.item-container {
+  margin: 0;
+  padding: 0;
+}
 
 .item-container:before,
 .item-container:after {
