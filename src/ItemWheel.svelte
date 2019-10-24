@@ -78,9 +78,7 @@
 
 
 <style>
-  .day,
-.month,
-.year {
+ .item-wrapper {
   position: relative;
   height: 50px;
   margin: 0 10px;
@@ -88,12 +86,9 @@
   border-bottom: 1px solid #0522f3;
   border-radius: 0;
 }
-.day:before,
-.month:before,
-.year:before,
-.day:after,
-.month:after,
-.year:after {
+
+.item-container:before,
+.item-container:after {
   content: '';
   position: absolute;
   left: 0;
@@ -104,19 +99,16 @@
   pointer-events: none;
   z-index: 1;
 }
-.day:before,
-.month:before,
-.year:before {
+
+.item-container:before {
   top: -51px;
 }
-.day:after,
-.month:after,
-.year:after {
+
+.item-container:after {
   bottom: -51px;
 }
-.day li,
-.month li,
-.year li {
+
+.item-container li {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -130,8 +122,8 @@
 </style>
 
 
-<div class='year' on:mousedown={onMouseDown} on:touchstart={onMouseDown}>
-  <ul bind:this={itemWrapper} >
+<div class='item-wrapper' on:mousedown={onMouseDown} on:touchstart={onMouseDown}>
+  <ul bind:this={itemWrapper} class="item-container">
    {#each data as item }
      <li>{item}</li>
    {/each}
