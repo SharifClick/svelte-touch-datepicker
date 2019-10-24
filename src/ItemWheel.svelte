@@ -1,6 +1,6 @@
 <script>
 
-  import { afterUpdate } from 'svelte';
+  import { beforeUpdate } from 'svelte';
   
   export let selected = 0;
   export let data = 0;
@@ -11,6 +11,9 @@
 
   let itemWrapper, previousY;
 
+  export let onDateChange = () => {};
+  export let type;
+
   let itemPosition = `
       will-change: 'transform';
       transition: transform ${Math.abs(offset) / 100 + 0.1}s;
@@ -18,14 +21,14 @@
   `;
  
 
-  afterUpdate(() => {
+  beforeUpdate(() => {
 		let selectedPosition = -(selected - 1) * 50
     
     if (!dragging && position !== selectedPosition) {
         position: selectedPosition
     }
 
-    itemWrapper.style.cssText = itemPosition;
+    console.log('beforeupdate')
   });
 
   let onMouseDown = (event) => {
@@ -49,6 +52,8 @@
     position = Math.max(maxPosition, Math.min(50, _position))
 
     previousY = event.touches ? event.touches[0].clientY : event.clientY;
+
+    itemWrapper.style.cssText = itemPosition;
   }
 
   let onMouseUp = () => {
@@ -65,7 +70,7 @@
     document.removeEventListener('touchmove', onMouseMove)
     document.removeEventListener('touchend', onMouseUp)
     
-    // this.props.onDateChange(this.props.type, -finalPosition / 50)
+    onDateChange(type, -finalPosition / 50)
   }
   
 
@@ -73,7 +78,55 @@
 
 
 <style>
-
+  .day,
+.month,
+.year {
+  position: relative;
+  height: 50px;
+  margin: 0 10px;
+  border-top: 1px solid #0522f3;
+  border-bottom: 1px solid #0522f3;
+  border-radius: 0;
+}
+.day:before,
+.month:before,
+.year:before,
+.day:after,
+.month:after,
+.year:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 80px;
+  height: 50px;
+  background-color: #fff;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 1;
+}
+.day:before,
+.month:before,
+.year:before {
+  top: -51px;
+}
+.day:after,
+.month:after,
+.year:after {
+  bottom: -51px;
+}
+.day li,
+.month li,
+.year li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 50px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
 </style>
 
 

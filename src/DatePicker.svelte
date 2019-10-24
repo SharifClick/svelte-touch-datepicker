@@ -52,55 +52,7 @@
   margin: 30px 0;
   overflow: hidden;
 }
-.day,
-.month,
-.year {
-  position: relative;
-  height: 50px;
-  margin: 0 10px;
-  border-top: 1px solid #0522f3;
-  border-bottom: 1px solid #0522f3;
-  border-radius: 0;
-}
-.day:before,
-.month:before,
-.year:before,
-.day:after,
-.month:after,
-.year:after {
-  content: '';
-  position: absolute;
-  left: 0;
-  width: 80px;
-  height: 50px;
-  background-color: #fff;
-  opacity: 0.8;
-  pointer-events: none;
-  z-index: 1;
-}
-.day:before,
-.month:before,
-.year:before {
-  top: -51px;
-}
-.day:after,
-.month:after,
-.year:after {
-  bottom: -51px;
-}
-.day li,
-.month li,
-.year li {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 80px;
-  height: 50px;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-}
+
 .reset {
   width: 100px;
   height: 30px;
