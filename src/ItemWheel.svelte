@@ -30,8 +30,7 @@
     if (!dragging && position !== selectedPosition) {
         position: selectedPosition
     }
-    console.log('afterupdate')
-    // itemWrapper.scrollTop = 200
+
   });
 
 

@@ -2,6 +2,7 @@
   
   import { ItemWheel } from './index.js';
 
+    import { afterUpdate } from 'svelte';
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
   const YEARS = new Array(201).fill(1900).map((value, index) => value + index);
@@ -13,9 +14,6 @@
     date = new Date();
   }
 
-  let setChangedDate = (newDate) => {
-    date = newDate;
-  }
 
   $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((value, index) => value + index)
 
@@ -44,7 +42,7 @@
     
     }
 
-    setChangedDate(newDate)
+    date = newDate;
   }
   
 </script>
