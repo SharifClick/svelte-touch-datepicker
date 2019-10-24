@@ -18,7 +18,10 @@
 
   onMount(() => {
 		
+   setPosition()
   });
+
+  
 
   afterUpdate(() => {
 		let selectedPosition = -(selected - 1) * 50
@@ -27,42 +30,43 @@
         position: selectedPosition
     }
     console.log('afterupdate')
+    // itemWrapper.scrollTop = 200
   });
+
+
+  function setPosition(){
+     let itemPosition = `
+      will-change: 'transform';
+      transition: transform ${Math.abs(offset) / 100 + 0.1}s;
+      transform: translateY(${position}px)
+    `;
+    itemWrapper.style.cssText = itemPosition;
+  }
 
   let onMouseDown = (event) => {
     previousY = event.touches ? event.touches[0].clientY : event.clientY;
     dragging = true;
     
-    document.addEventListener('mousemove', onMouseMove)
-    document.addEventListener('mouseup', onMouseUp)
-    document.addEventListener('touchmove', onMouseMove)
-    document.addEventListener('touchend', onMouseUp)
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', onMouseUp)
+    window.addEventListener('touchmove', onMouseMove)
+    window.addEventListener('touchend', onMouseUp)
   }
 
    let onMouseMove = (event) => {
     let clientY = event.touches ? event.touches[0].clientY : event.clientY;
 
     offset = clientY - previousY
-
     
     let maxPosition = -data.length * 50
     let _position = position + offset
-
-    console.log({_position, offset,clientY, previousY })
    
-    
     position = Math.max(maxPosition, Math.min(50, _position))
 
     previousY = event.touches ? event.touches[0].clientY : event.clientY;
 
 
-    let itemPosition = `
-      will-change: 'transform';
-      transition: transform ${Math.abs(offset) / 100 + 0.1}s;
-      transform: translateY(${position}px)
-    `;
-
-    itemWrapper.style.cssText = itemPosition;
+    setPosition();
   }
 
   let onMouseUp = () => {
@@ -74,10 +78,10 @@
     dragging = false;
     position = finalPosition;
     
-    document.removeEventListener('mousemove', onMouseMove)
-    document.removeEventListener('mouseup', onMouseUp)
-    document.removeEventListener('touchmove', onMouseMove)
-    document.removeEventListener('touchend', onMouseUp)
+    window.removeEventListener('mousemove', onMouseMove)
+    window.removeEventListener('mouseup', onMouseUp)
+    window.removeEventListener('touchmove', onMouseMove)
+    window.removeEventListener('touchend', onMouseUp)
     
     onDateChange(type, -finalPosition / 50)
   }
