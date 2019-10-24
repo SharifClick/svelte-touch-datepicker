@@ -77,6 +77,9 @@ var app = (function () {
             throw new Error(`Function called outside component initialization`);
         return current_component;
     }
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
+    }
     function afterUpdate(fn) {
         get_current_component().$$.after_update.push(fn);
     }
@@ -567,7 +570,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (135:3) {#each data as item }
+    // (140:3) {#each data as item }
     function create_each_block(ctx) {
     	var li, t_value = ctx.item + "", t;
 
@@ -575,8 +578,8 @@ var app = (function () {
     		c: function create() {
     			li = element("li");
     			t = text(t_value);
-    			attr_dev(li, "class", "svelte-1cpex4r");
-    			add_location(li, file$1, 135, 5, 3142);
+    			attr_dev(li, "class", "svelte-fzaiij");
+    			add_location(li, file$1, 140, 5, 3227);
     		},
 
     		m: function mount(target, anchor) {
@@ -596,7 +599,7 @@ var app = (function () {
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(135:3) {#each data as item }", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(140:3) {#each data as item }", ctx });
     	return block;
     }
 
@@ -619,9 +622,10 @@ var app = (function () {
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			add_location(ul, file$1, 133, 2, 3080);
-    			attr_dev(div, "class", "year svelte-1cpex4r");
-    			add_location(div, file$1, 132, 0, 3003);
+    			attr_dev(ul, "class", "item-container svelte-fzaiij");
+    			add_location(ul, file$1, 138, 2, 3143);
+    			attr_dev(div, "class", "item-wrapper svelte-fzaiij");
+    			add_location(div, file$1, 137, 0, 3058);
 
     			dispose = [
     				listen_dev(div, "mousedown", ctx.onMouseDown),
@@ -687,9 +691,11 @@ var app = (function () {
     }
 
     function instance$1($$self, $$props, $$invalidate) {
-    	let { selected = 0, data = 0 } = $$props;
+    	let { selected, data = 0 } = $$props;
 
       let position = selected ? -(selected - 1) * 50 : 0;
+
+      
       let offset = 0;
       let dragging = false;
 
@@ -698,15 +704,11 @@ var app = (function () {
       let { onDateChange = () => {} } = $$props;
       let { type } = $$props;
 
-      let itemPosition;
-     
+      onMount(() => {
+    		
+      });
 
       afterUpdate(() => {
-       itemPosition = `
-      will-change: 'transform';
-      transition: transform ${Math.abs(offset) / 100 + 0.1}s;
-      transform: translateY(${position}px)
-    `;
         console.log('afterupdate');
       });
 
@@ -724,13 +726,24 @@ var app = (function () {
         let clientY = event.touches ? event.touches[0].clientY : event.clientY;
 
         offset = clientY - previousY;
+
         
         let maxPosition = -data.length * 50;
         let _position = position + offset;
+
+        console.log({_position, offset,clientY, previousY });
+       
         
         position = Math.max(maxPosition, Math.min(50, _position));
 
         previousY = event.touches ? event.touches[0].clientY : event.clientY;
+
+
+        let itemPosition = `
+      will-change: 'transform';
+      transition: transform ${Math.abs(offset) / 100 + 0.1}s;
+      transform: translateY(${position}px)
+    `;
 
         $$invalidate('itemWrapper', itemWrapper.style.cssText = itemPosition, itemWrapper);
       };
@@ -771,7 +784,7 @@ var app = (function () {
     	};
 
     	$$self.$capture_state = () => {
-    		return { selected, data, position, offset, dragging, itemWrapper, previousY, onDateChange, type, itemPosition, onMouseDown, onMouseMove, onMouseUp };
+    		return { selected, data, position, offset, dragging, itemWrapper, previousY, onDateChange, type, onMouseDown, onMouseMove, onMouseUp };
     	};
 
     	$$self.$inject_state = $$props => {
@@ -784,7 +797,6 @@ var app = (function () {
     		if ('previousY' in $$props) previousY = $$props.previousY;
     		if ('onDateChange' in $$props) $$invalidate('onDateChange', onDateChange = $$props.onDateChange);
     		if ('type' in $$props) $$invalidate('type', type = $$props.type);
-    		if ('itemPosition' in $$props) itemPosition = $$props.itemPosition;
     		if ('onMouseDown' in $$props) $$invalidate('onMouseDown', onMouseDown = $$props.onMouseDown);
     		if ('onMouseMove' in $$props) onMouseMove = $$props.onMouseMove;
     		if ('onMouseUp' in $$props) onMouseUp = $$props.onMouseUp;
@@ -809,6 +821,9 @@ var app = (function () {
 
     		const { ctx } = this.$$;
     		const props = options.props || {};
+    		if (ctx.selected === undefined && !('selected' in props)) {
+    			console_1.warn("<ItemWheel> was created without expected prop 'selected'");
+    		}
     		if (ctx.type === undefined && !('type' in props)) {
     			console_1.warn("<ItemWheel> was created without expected prop 'type'");
     		}
@@ -861,10 +876,10 @@ var app = (function () {
     			div1 = element("div");
     			div0 = element("div");
     			datepicker.$$.fragment.c();
-    			attr_dev(div0, "class", "center svelte-1aig58e");
-    			add_location(div0, file$2, 36, 2, 579);
-    			attr_dev(div1, "class", "container svelte-1aig58e");
-    			add_location(div1, file$2, 35, 0, 551);
+    			attr_dev(div0, "class", "center svelte-1g5tyhp");
+    			add_location(div0, file$2, 35, 2, 557);
+    			attr_dev(div1, "class", "container svelte-1g5tyhp");
+    			add_location(div1, file$2, 34, 0, 529);
     		},
 
     		l: function claim(nodes) {
