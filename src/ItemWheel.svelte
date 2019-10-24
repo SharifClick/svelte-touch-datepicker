@@ -57,7 +57,7 @@
     let clientY = event.touches ? event.touches[0].clientY : event.clientY;
 
     offset = clientY - previousY
-    
+
     let maxPosition = -data.length * 50
     let _position = position + offset
    
@@ -104,8 +104,8 @@
   padding: 0;
 }
 
-.item-container:before,
-.item-container:after {
+.item-wrapper:before,
+.item-wrapper:after {
   content: '';
   position: absolute;
   left: 0;
@@ -117,11 +117,11 @@
   z-index: 1;
 }
 
-.item-container:before {
+.item-wrapper:before {
   top: -51px;
 }
 
-.item-container:after {
+.item-wrapper:after {
   bottom: -51px;
 }
 
