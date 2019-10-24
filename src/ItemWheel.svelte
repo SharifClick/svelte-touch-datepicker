@@ -1,6 +1,6 @@
 <script>
 
-  import { beforeUpdate } from 'svelte';
+  import { afterUpdate } from 'svelte';
   
   export let selected = 0;
   export let data = 0;
@@ -14,21 +14,21 @@
   export let onDateChange = () => {};
   export let type;
 
-  let itemPosition = `
-      will-change: 'transform';
-      transition: transform ${Math.abs(offset) / 100 + 0.1}s;
-      transform: translateY(${position}px)
-  `;
+  let itemPosition;
  
 
-  beforeUpdate(() => {
+  afterUpdate(() => {
 		let selectedPosition = -(selected - 1) * 50
     
     if (!dragging && position !== selectedPosition) {
         position: selectedPosition
     }
-
-    console.log('beforeupdate')
+   itemPosition = `
+      will-change: 'transform';
+      transition: transform ${Math.abs(offset) / 100 + 0.1}s;
+      transform: translateY(${position}px)
+    `;
+    console.log('afterupdate')
   });
 
   let onMouseDown = (event) => {
