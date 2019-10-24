@@ -570,7 +570,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (140:3) {#each data as item }
+    // (146:3) {#each data as item }
     function create_each_block(ctx) {
     	var li, t_value = ctx.item + "", t;
 
@@ -578,8 +578,8 @@ var app = (function () {
     		c: function create() {
     			li = element("li");
     			t = text(t_value);
-    			attr_dev(li, "class", "svelte-fzaiij");
-    			add_location(li, file$1, 140, 5, 3227);
+    			attr_dev(li, "class", "svelte-1f6ediz");
+    			add_location(li, file$1, 146, 5, 3269);
     		},
 
     		m: function mount(target, anchor) {
@@ -599,7 +599,7 @@ var app = (function () {
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(140:3) {#each data as item }", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(146:3) {#each data as item }", ctx });
     	return block;
     }
 
@@ -622,10 +622,10 @@ var app = (function () {
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			attr_dev(ul, "class", "item-container svelte-fzaiij");
-    			add_location(ul, file$1, 138, 2, 3143);
-    			attr_dev(div, "class", "item-wrapper svelte-fzaiij");
-    			add_location(div, file$1, 137, 0, 3058);
+    			attr_dev(ul, "class", "item-container svelte-1f6ediz");
+    			add_location(ul, file$1, 144, 2, 3185);
+    			attr_dev(div, "class", "item-wrapper svelte-1f6ediz");
+    			add_location(div, file$1, 143, 0, 3100);
 
     			dispose = [
     				listen_dev(div, "mousedown", ctx.onMouseDown),
@@ -706,20 +706,34 @@ var app = (function () {
 
       onMount(() => {
     		
+       setPosition();
       });
+
+      
 
       afterUpdate(() => {
         console.log('afterupdate');
+        // itemWrapper.scrollTop = 200
       });
+
+
+      function setPosition(){
+         let itemPosition = `
+      will-change: 'transform';
+      transition: transform ${Math.abs(offset) / 100 + 0.1}s;
+      transform: translateY(${position}px)
+    `;
+        $$invalidate('itemWrapper', itemWrapper.style.cssText = itemPosition, itemWrapper);
+      }
 
       let onMouseDown = (event) => {
         previousY = event.touches ? event.touches[0].clientY : event.clientY;
         dragging = true;
         
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
-        document.addEventListener('touchmove', onMouseMove);
-        document.addEventListener('touchend', onMouseUp);
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+        window.addEventListener('touchmove', onMouseMove);
+        window.addEventListener('touchend', onMouseUp);
       };
 
        let onMouseMove = (event) => {
@@ -727,25 +741,15 @@ var app = (function () {
 
         offset = clientY - previousY;
 
-        
         let maxPosition = -data.length * 50;
         let _position = position + offset;
-
-        console.log({_position, offset,clientY, previousY });
        
-        
         position = Math.max(maxPosition, Math.min(50, _position));
 
         previousY = event.touches ? event.touches[0].clientY : event.clientY;
 
 
-        let itemPosition = `
-      will-change: 'transform';
-      transition: transform ${Math.abs(offset) / 100 + 0.1}s;
-      transform: translateY(${position}px)
-    `;
-
-        $$invalidate('itemWrapper', itemWrapper.style.cssText = itemPosition, itemWrapper);
+        setPosition();
       };
 
       let onMouseUp = () => {
@@ -757,10 +761,12 @@ var app = (function () {
         dragging = false;
         position = finalPosition;
         
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-        document.removeEventListener('touchmove', onMouseMove);
-        document.removeEventListener('touchend', onMouseUp);
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseup', onMouseUp);
+        window.removeEventListener('touchmove', onMouseMove);
+        window.removeEventListener('touchend', onMouseUp);
+
+        setPosition();
         
         onDateChange(type, -finalPosition / 50);
       };
