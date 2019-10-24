@@ -1,11 +1,13 @@
 <script>
 
-  import { afterUpdate } from 'svelte';
+  import { afterUpdate, onMount } from 'svelte';
   
-  export let selected = 0;
+  export let selected;
   export let data = 0;
 
   let position = selected ? -(selected - 1) * 50 : 0;
+
+  
   let offset = 0;
   let dragging = false;
 
@@ -14,8 +16,9 @@
   export let onDateChange = () => {};
   export let type;
 
-  let itemPosition;
- 
+  onMount(() => {
+		
+  });
 
   afterUpdate(() => {
 		let selectedPosition = -(selected - 1) * 50
@@ -23,11 +26,6 @@
     if (!dragging && position !== selectedPosition) {
         position: selectedPosition
     }
-   itemPosition = `
-      will-change: 'transform';
-      transition: transform ${Math.abs(offset) / 100 + 0.1}s;
-      transform: translateY(${position}px)
-    `;
     console.log('afterupdate')
   });
 
@@ -45,13 +43,24 @@
     let clientY = event.touches ? event.touches[0].clientY : event.clientY;
 
     offset = clientY - previousY
+
     
     let maxPosition = -data.length * 50
     let _position = position + offset
+
+    console.log({_position, offset,clientY, previousY })
+   
     
     position = Math.max(maxPosition, Math.min(50, _position))
 
     previousY = event.touches ? event.touches[0].clientY : event.clientY;
+
+
+    let itemPosition = `
+      will-change: 'transform';
+      transition: transform ${Math.abs(offset) / 100 + 0.1}s;
+      transform: translateY(${position}px)
+    `;
 
     itemWrapper.style.cssText = itemPosition;
   }

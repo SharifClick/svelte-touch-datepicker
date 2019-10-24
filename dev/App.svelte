@@ -20,7 +20,6 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    font-size: 12px;
   }
 
   .center {
@@ -28,7 +27,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font: 16px 'Roboto', sans-serif;
+    font: 20px 'Roboto', sans-serif;
   }
   
 </style>
