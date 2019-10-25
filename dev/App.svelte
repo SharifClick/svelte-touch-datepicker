@@ -1,5 +1,5 @@
 <script>
-  import { DatePicker } from "../src/index.js";
+  import DatePicker  from "../src/index.js";
  
 
 </script>
