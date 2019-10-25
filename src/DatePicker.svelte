@@ -1,6 +1,6 @@
 <script>
   
-  import { ItemWheel } from './index.js';
+  import DateSwitcher from './DateSwitcher.svelte';
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
   const YEARS = new Array(201).fill(1900).map((v, i) => v + i);
@@ -78,9 +78,9 @@
 <div class='touch-date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
 <p>{ WEEKDAY[date.getDay()] }</p>
   <div class='touch-date-picker'>
-    <ItemWheel type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
-    <ItemWheel type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
-    <ItemWheel type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
+    <DateSwitcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
+    <DateSwitcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
+    <DateSwitcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
   </div>
 <button class='touch-date-reset' on:click={resetDate}>Reset Date</button>
 

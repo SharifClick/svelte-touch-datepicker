@@ -6,23 +6,18 @@
 
   export let selected;
   export let data = 0;
+  export let type;
 
   let position = selected ? -(selected - 1) * 50 : 0;
-
-
   let offset = 0;
   let dragging = false;
 
   let itemWrapper, previousY;
 
-  export let type;
 
   onMount(() => {
-
    setPosition()
   });
-
-
 
   afterUpdate(() => {
 		let selectedPosition = -(selected - 1) * 50
@@ -61,22 +56,16 @@
 
    let onMouseMove = (event) => {
     let clientY = event.touches ? event.touches[0].clientY : event.clientY;
+    offset = clientY - previousY;
 
-    offset = clientY - previousY
-
-    let maxPosition = -data.length * 50
-    let _position = position + offset
-
+    let maxPosition = -data.length * 50;
+    let _position = position + offset;
     position = Math.max(maxPosition, Math.min(50, _position))
-
     previousY = event.touches ? event.touches[0].clientY : event.clientY;
-
-
     setPosition();
   }
 
   let onMouseUp = () => {
-    // calculate closeset snap
     let maxPosition = -(data.length - 1) * 50;
     let rounderPosition = Math.round((position + offset * 5) / 50) * 50;
     let finalPosition = Math.max(maxPosition, Math.min(0, rounderPosition));
@@ -90,7 +79,6 @@
     window.removeEventListener('touchend', onMouseUp);
 
     setPosition();
-
     onDateChange(type, -finalPosition / 50)
   }
 
@@ -99,7 +87,7 @@
 
 
 <style>
- .item-wrapper {
+ .touch-date-wrapper {
   position: relative;
   height: 50px;
   margin: 0 10px;
@@ -107,13 +95,13 @@
   border-bottom: 1px solid #0522f3;
   border-radius: 0;
 }
-.item-container {
+.touch-date-container {
   margin: 0;
   padding: 0;
 }
 
-.item-wrapper:before,
-.item-wrapper:after {
+.touch-date-wrapper:before,
+.touch-date-wrapper:after {
   content: '';
   position: absolute;
   left: 0;
@@ -125,15 +113,15 @@
   z-index: 1;
 }
 
-.item-wrapper:before {
+.touch-date-wrapper:before {
   top: -51px;
 }
 
-.item-wrapper:after {
+.touch-date-wrapper:after {
   bottom: -51px;
 }
 
-.item-container li {
+.touch-date-container li {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -147,8 +135,8 @@
 </style>
 
 
-<div class='item-wrapper' on:mousedown={onMouseDown} on:touchstart={onMouseDown}>
-  <ul bind:this={itemWrapper} class="item-container">
+<div class='touch-date-wrapper' on:mousedown={onMouseDown} on:touchstart={onMouseDown}>
+  <ul bind:this={itemWrapper} class="touch-date-container">
    {#each data as item }
      <li>{item}</li>
    {/each}
