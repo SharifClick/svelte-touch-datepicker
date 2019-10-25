@@ -2,9 +2,11 @@
   
   import { ItemWheel } from './index.js';
 
+    import { afterUpdate } from 'svelte';
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
   const YEARS = new Array(201).fill(1900).map((value, index) => value + index);
+  const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 
   let date = new Date();
@@ -13,9 +15,6 @@
     date = new Date();
   }
 
-  let setChangedDate = (newDate) => {
-    date = newDate;
-  }
 
   $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((value, index) => value + index)
 
@@ -44,7 +43,7 @@
     
     }
 
-    setChangedDate(newDate)
+    date = newDate;
   }
   
 </script>
@@ -82,6 +81,7 @@
 
 
 <div class='date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
+<p>{ WEEKDAY[date.getDay()] }</p>
   <div class='date-picker'>
       <ItemWheel type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
       <ItemWheel type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>

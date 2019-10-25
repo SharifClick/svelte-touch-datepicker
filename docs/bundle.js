@@ -347,7 +347,7 @@ var app = (function () {
     const file = "src\\DatePicker.svelte";
 
     function create_fragment(ctx) {
-    	var div0, t0_value = ctx.date.getDate() + "", t0, t1, t2_value = ctx.MONTHS[ctx.date.getMonth()] + "", t2, t3, t4_value = ctx.date.getFullYear() + "", t4, t5, div1, t6, t7, t8, button, current, dispose;
+    	var div0, t0_value = ctx.date.getDate() + "", t0, t1, t2_value = ctx.MONTHS[ctx.date.getMonth()] + "", t2, t3, t4_value = ctx.date.getFullYear() + "", t4, t5, p, t6_value = ctx.WEEKDAY[ctx.date.getDay()] + "", t6, t7, div1, t8, t9, t10, button, current, dispose;
 
     	var itemwheel0 = new ItemWheel({
     		props: {
@@ -389,21 +389,25 @@ var app = (function () {
     			t3 = space();
     			t4 = text(t4_value);
     			t5 = space();
+    			p = element("p");
+    			t6 = text(t6_value);
+    			t7 = space();
     			div1 = element("div");
     			itemwheel0.$$.fragment.c();
-    			t6 = space();
-    			itemwheel1.$$.fragment.c();
-    			t7 = space();
-    			itemwheel2.$$.fragment.c();
     			t8 = space();
+    			itemwheel1.$$.fragment.c();
+    			t9 = space();
+    			itemwheel2.$$.fragment.c();
+    			t10 = space();
     			button = element("button");
     			button.textContent = "Reset Date";
     			attr_dev(div0, "class", "date svelte-1a9a205");
-    			add_location(div0, file, 83, 0, 1878);
+    			add_location(div0, file, 82, 0, 1947);
+    			add_location(p, file, 83, 0, 2042);
     			attr_dev(div1, "class", "date-picker svelte-1a9a205");
-    			add_location(div1, file, 84, 2, 1975);
+    			add_location(div1, file, 84, 2, 2079);
     			attr_dev(button, "class", "reset svelte-1a9a205");
-    			add_location(button, file, 89, 0, 2320);
+    			add_location(button, file, 89, 0, 2424);
     			dispose = listen_dev(button, "click", ctx.resetDate);
     		},
 
@@ -419,13 +423,16 @@ var app = (function () {
     			append_dev(div0, t3);
     			append_dev(div0, t4);
     			insert_dev(target, t5, anchor);
+    			insert_dev(target, p, anchor);
+    			append_dev(p, t6);
+    			insert_dev(target, t7, anchor);
     			insert_dev(target, div1, anchor);
     			mount_component(itemwheel0, div1, null);
-    			append_dev(div1, t6);
+    			append_dev(div1, t8);
     			mount_component(itemwheel1, div1, null);
-    			append_dev(div1, t7);
+    			append_dev(div1, t9);
     			mount_component(itemwheel2, div1, null);
-    			insert_dev(target, t8, anchor);
+    			insert_dev(target, t10, anchor);
     			insert_dev(target, button, anchor);
     			current = true;
     		},
@@ -441,6 +448,10 @@ var app = (function () {
 
     			if ((!current || changed.date) && t4_value !== (t4_value = ctx.date.getFullYear() + "")) {
     				set_data_dev(t4, t4_value);
+    			}
+
+    			if ((!current || changed.date) && t6_value !== (t6_value = ctx.WEEKDAY[ctx.date.getDay()] + "")) {
+    				set_data_dev(t6, t6_value);
     			}
 
     			var itemwheel0_changes = {};
@@ -479,6 +490,8 @@ var app = (function () {
     			if (detaching) {
     				detach_dev(div0);
     				detach_dev(t5);
+    				detach_dev(p);
+    				detach_dev(t7);
     				detach_dev(div1);
     			}
 
@@ -489,7 +502,7 @@ var app = (function () {
     			destroy_component(itemwheel2);
 
     			if (detaching) {
-    				detach_dev(t8);
+    				detach_dev(t10);
     				detach_dev(button);
     			}
 
@@ -501,18 +514,17 @@ var app = (function () {
     }
 
     function instance($$self, $$props, $$invalidate) {
-    	const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+    	
+
+      const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
       const YEARS = new Array(201).fill(1900).map((value, index) => value + index);
+      const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 
       let date = new Date();
 
       let resetDate = () => {
         $$invalidate('date', date = new Date());
-      };
-
-      let setChangedDate = (newDate) => {
-        $$invalidate('date', date = newDate);
       };
 
       let dateChanged = (event) => {
@@ -540,7 +552,7 @@ var app = (function () {
         
         }
 
-        setChangedDate(newDate);
+        $$invalidate('date', date = newDate);
       };
 
     	$$self.$capture_state = () => {
@@ -550,7 +562,6 @@ var app = (function () {
     	$$self.$inject_state = $$props => {
     		if ('date' in $$props) $$invalidate('date', date = $$props.date);
     		if ('resetDate' in $$props) $$invalidate('resetDate', resetDate = $$props.resetDate);
-    		if ('setChangedDate' in $$props) setChangedDate = $$props.setChangedDate;
     		if ('dateChanged' in $$props) $$invalidate('dateChanged', dateChanged = $$props.dateChanged);
     		if ('DAYS' in $$props) $$invalidate('DAYS', DAYS = $$props.DAYS);
     	};
@@ -564,6 +575,7 @@ var app = (function () {
     	return {
     		MONTHS,
     		YEARS,
+    		WEEKDAY,
     		date,
     		resetDate,
     		dateChanged,
@@ -589,7 +601,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (153:3) {#each data as item }
+    // (152:3) {#each data as item }
     function create_each_block(ctx) {
     	var li, t_value = ctx.item + "", t;
 
@@ -598,7 +610,7 @@ var app = (function () {
     			li = element("li");
     			t = text(t_value);
     			attr_dev(li, "class", "svelte-1f6ediz");
-    			add_location(li, file$1, 153, 5, 3369);
+    			add_location(li, file$1, 152, 5, 3333);
     		},
 
     		m: function mount(target, anchor) {
@@ -618,7 +630,7 @@ var app = (function () {
     			}
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(153:3) {#each data as item }", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(152:3) {#each data as item }", ctx });
     	return block;
     }
 
@@ -642,9 +654,9 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr_dev(ul, "class", "item-container svelte-1f6ediz");
-    			add_location(ul, file$1, 151, 2, 3285);
+    			add_location(ul, file$1, 150, 2, 3249);
     			attr_dev(div, "class", "item-wrapper svelte-1f6ediz");
-    			add_location(div, file$1, 150, 0, 3200);
+    			add_location(div, file$1, 149, 0, 3164);
 
     			dispose = [
     				listen_dev(div, "mousedown", ctx.onMouseDown),
@@ -738,7 +750,6 @@ var app = (function () {
             position = selectedPosition;
             setPosition();
         }
-        // itemWrapper.scrollTop = 200
       });
 
 

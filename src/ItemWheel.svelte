@@ -31,7 +31,6 @@
         position = selectedPosition
         setPosition()
     }
-    // itemWrapper.scrollTop = 200
   });
 
 
