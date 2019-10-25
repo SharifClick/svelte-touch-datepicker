@@ -4,6 +4,7 @@
 
   let date = new Date('Sat Oct 31 2019');
   let visible = false;
+  let inputDate;
 
   afterUpdate(() => {
 	  console.log(date);
@@ -14,6 +15,9 @@
   }
 
   $: _date = date.toLocaleDateString("en-US");
+  $: _inputdate = new Date(inputDate);
+
+
  
 
 
@@ -50,7 +54,8 @@
 
 <div class="container" >
   <div class="center">
-  <p on:click={toggle}>{_date}</p>
+    <p on:click={toggle}>{_date}</p>
+    <input type="text" value={_date} on:focus={toggle}>
     <DatePicker bind:date bind:visible/>
   </div>
 </div>
