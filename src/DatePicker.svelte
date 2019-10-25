@@ -8,7 +8,7 @@
 
   $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((v, i) => v + i)
 
-  let date = new Date();
+  export let date = new Date();
 
   let resetDate = () => {
     date = new Date();
