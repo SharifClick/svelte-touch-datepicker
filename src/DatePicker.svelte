@@ -6,6 +6,14 @@
   const YEARS = new Array(201).fill(1900).map((v, i) => v + i);
   const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+  export let mode = 'time';
+
+  const HOURS = new Array(24).fill(1).map((v, i) => v + i);
+  const MINUTES = new Array(60).fill(1).map((v, i) => v + i);
+
+  const MERIDIEM = ['am', 'pm'];
+
+
   $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((v, i) => v + i)
 
   export let date = new Date();
@@ -105,13 +113,25 @@
   <div class="touch-date-popup" on:click={() => {visible = !visible}}>
     <div>
       <div class="touch-date-wrapper">
-        <div class='touch-date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
-        <p>{ WEEKDAY[date.getDay()] }</p>
-        <div class='touch-date-picker'>
-          <DateSwitcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
-          <DateSwitcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
-          <DateSwitcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
-        </div>
+        {#if mode == 'date'}
+          <div class='touch-date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
+          <p>{ WEEKDAY[date.getDay()] }</p>
+          <div class='touch-date-picker'>
+            <DateSwitcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
+            <DateSwitcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
+            <DateSwitcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
+          </div>
+        {/if}
+
+        {#if mode == 'time'}
+          <div class='touch-date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
+          <p>{ WEEKDAY[date.getDay()] }</p>
+          <div class='touch-date-picker'>
+            <DateSwitcher type='hours' data={HOURS} selected={date.getHours()} on:dateChange={dateChanged} }/>
+            <DateSwitcher type='minutes' data={MINUTES} selected={date.getMinutes() + 1} on:dateChange={dateChanged}/>
+            <DateSwitcher type='year' data={['am', 'pm']} selected={'am'} on:dateChange={dateChanged}/>
+          </div>
+        {/if}
         <div class='touch-date-reset'>
           <button on:click={resetDate}>Reset</button>
           <button on:click={() => {visible = !visible}}>Ok</button>
