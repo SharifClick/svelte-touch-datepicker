@@ -3,13 +3,13 @@
   import { afterUpdate, onMount, createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
-  
+
   export let selected;
   export let data = 0;
 
   let position = selected ? -(selected - 1) * 50 : 0;
 
-  
+
   let offset = 0;
   let dragging = false;
 
@@ -18,19 +18,19 @@
   export let type;
 
   onMount(() => {
-		
+
    setPosition()
   });
 
-  
+
 
   afterUpdate(() => {
 		let selectedPosition = -(selected - 1) * 50
-    
-    if (!dragging && position !== selectedPosition) {
-        position: selectedPosition
-    }
 
+    if (!dragging && position !== selectedPosition) {
+        position = selectedPosition
+        setPosition()
+    }
   });
 
 
@@ -39,7 +39,7 @@
 			type, changedData
 		});
   }
-  
+
   function setPosition(){
      let itemPosition = `
       will-change: 'transform';
@@ -52,7 +52,7 @@
   let onMouseDown = (event) => {
     previousY = event.touches ? event.touches[0].clientY : event.clientY;
     dragging = true;
-    
+
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('mouseup', onMouseUp)
     window.addEventListener('touchmove', onMouseMove)
@@ -66,7 +66,7 @@
 
     let maxPosition = -data.length * 50
     let _position = position + offset
-   
+
     position = Math.max(maxPosition, Math.min(50, _position))
 
     previousY = event.touches ? event.touches[0].clientY : event.clientY;
@@ -80,20 +80,20 @@
     let maxPosition = -(data.length - 1) * 50;
     let rounderPosition = Math.round((position + offset * 5) / 50) * 50;
     let finalPosition = Math.max(maxPosition, Math.min(0, rounderPosition));
-    
+
     dragging = false;
     position = finalPosition;
-    
+
     window.removeEventListener('mousemove', onMouseMove)
     window.removeEventListener('mouseup', onMouseUp)
     window.removeEventListener('touchmove', onMouseMove)
     window.removeEventListener('touchend', onMouseUp);
 
     setPosition();
-    
+
     onDateChange(type, -finalPosition / 50)
   }
-  
+
 
 </script>
 

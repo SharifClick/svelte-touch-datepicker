@@ -610,7 +610,7 @@ var app = (function () {
     			li = element("li");
     			t = text(t_value);
     			attr_dev(li, "class", "svelte-1f6ediz");
-    			add_location(li, file$1, 152, 5, 3346);
+    			add_location(li, file$1, 152, 5, 3333);
     		},
 
     		m: function mount(target, anchor) {
@@ -654,9 +654,9 @@ var app = (function () {
     				each_blocks[i].c();
     			}
     			attr_dev(ul, "class", "item-container svelte-1f6ediz");
-    			add_location(ul, file$1, 150, 2, 3262);
+    			add_location(ul, file$1, 150, 2, 3249);
     			attr_dev(div, "class", "item-wrapper svelte-1f6ediz");
-    			add_location(div, file$1, 149, 0, 3177);
+    			add_location(div, file$1, 149, 0, 3164);
 
     			dispose = [
     				listen_dev(div, "mousedown", ctx.onMouseDown),
@@ -723,12 +723,12 @@ var app = (function () {
 
     function instance$1($$self, $$props, $$invalidate) {
     	const dispatch = createEventDispatcher();
-      
+
       let { selected, data = 0 } = $$props;
 
       let position = selected ? -(selected - 1) * 50 : 0;
 
-      
+
       let offset = 0;
       let dragging = false;
 
@@ -737,14 +737,19 @@ var app = (function () {
       let { type } = $$props;
 
       onMount(() => {
-    		
+
        setPosition();
       });
 
-      
+
 
       afterUpdate(() => {
+    		let selectedPosition = -(selected - 1) * 50;
 
+        if (!dragging && position !== selectedPosition) {
+            position = selectedPosition;
+            setPosition();
+        }
       });
 
 
@@ -753,7 +758,7 @@ var app = (function () {
     			type, changedData
     		});
       }
-      
+
       function setPosition(){
          let itemPosition = `
       will-change: 'transform';
@@ -766,7 +771,7 @@ var app = (function () {
       let onMouseDown = (event) => {
         previousY = event.touches ? event.touches[0].clientY : event.clientY;
         dragging = true;
-        
+
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mouseup', onMouseUp);
         window.addEventListener('touchmove', onMouseMove);
@@ -780,7 +785,7 @@ var app = (function () {
 
         let maxPosition = -data.length * 50;
         let _position = position + offset;
-       
+
         position = Math.max(maxPosition, Math.min(50, _position));
 
         previousY = event.touches ? event.touches[0].clientY : event.clientY;
@@ -794,17 +799,17 @@ var app = (function () {
         let maxPosition = -(data.length - 1) * 50;
         let rounderPosition = Math.round((position + offset * 5) / 50) * 50;
         let finalPosition = Math.max(maxPosition, Math.min(0, rounderPosition));
-        
+
         dragging = false;
         position = finalPosition;
-        
+
         window.removeEventListener('mousemove', onMouseMove);
         window.removeEventListener('mouseup', onMouseUp);
         window.removeEventListener('touchmove', onMouseMove);
         window.removeEventListener('touchend', onMouseUp);
 
         setPosition();
-        
+
         onDateChange(type, -finalPosition / 50);
       };
 
