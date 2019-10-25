@@ -1,6 +1,22 @@
 <script>
+  import { afterUpdate} from 'svelte';
   import DatePicker  from "../src/index.js";
+
+  let date = new Date('Sat Oct 31 2019');
+  let visible = false;
+
+  afterUpdate(() => {
+	  console.log(date);
+  });
+
+  function toggle(){
+    visible = !visible
+  }
+
+  $: _date = date.toLocaleDateString("en-US");
  
+
+
 
 </script>
 
@@ -34,7 +50,8 @@
 
 <div class="container" >
   <div class="center">
-    <DatePicker />
+  <p on:click={toggle}>{_date}</p>
+    <DatePicker bind:date bind:visible/>
   </div>
 </div>
 
