@@ -9,8 +9,10 @@
   $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((v, i) => v + i)
 
   export let date = new Date();
+  export let visible = false;
 
-  let resetDate = () => {
+  let resetDate = (event) => {
+    event.stopPropagation()
     date = new Date();
   }
 
@@ -79,7 +81,7 @@
   overflow: hidden;
 }
 
-.touch-date-reset {
+.touch-date-reset > button {
   width: 100px;
   height: 30px;
   border-radius: 15px;
@@ -99,18 +101,23 @@
 </style>
 
 
-<div class="touch-date-popup">
-  <div>
-    <div class="touch-date-wrapper">
-      <div class='touch-date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
-      <p>{ WEEKDAY[date.getDay()] }</p>
-      <div class='touch-date-picker'>
-        <DateSwitcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
-        <DateSwitcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
-        <DateSwitcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
+{#if visible}
+  <div class="touch-date-popup" on:click={() => {visible = !visible}}>
+    <div>
+      <div class="touch-date-wrapper">
+        <div class='touch-date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
+        <p>{ WEEKDAY[date.getDay()] }</p>
+        <div class='touch-date-picker'>
+          <DateSwitcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
+          <DateSwitcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
+          <DateSwitcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
+        </div>
+        <div class='touch-date-reset'>
+          <button on:click={resetDate}>Reset</button>
+          <button on:click={() => {visible = !visible}}>Ok</button>
+        </div>
       </div>
-      <button class='touch-date-reset' on:click={resetDate}>Reset Date</button>
     </div>
   </div>
-</div>
+{/if}
 
