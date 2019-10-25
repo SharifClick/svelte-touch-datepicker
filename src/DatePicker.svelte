@@ -48,6 +48,30 @@
   font-size: 30px;
   font-weight: 300;
 }
+
+.touch-date-popup{
+ position: absolute;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.3);
+}
+.touch-date-popup > div{
+    background: white;
+    margin-top: 30vh;
+    width: 80%;
+    margin-left: 7%;
+    border-radius: 10px;
+    padding: 10px;
+}
+.touch-date-wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font: 20px 'Roboto', sans-serif;
+}
+
 .touch-date-picker {
   display: flex;
   padding: 50px 20px;
@@ -75,12 +99,18 @@
 </style>
 
 
-<div class='touch-date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
-<p>{ WEEKDAY[date.getDay()] }</p>
-  <div class='touch-date-picker'>
-    <DateSwitcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
-    <DateSwitcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
-    <DateSwitcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
+<div class="touch-date-popup">
+  <div>
+    <div class="touch-date-wrapper">
+      <div class='touch-date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
+      <p>{ WEEKDAY[date.getDay()] }</p>
+      <div class='touch-date-picker'>
+        <DateSwitcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
+        <DateSwitcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
+        <DateSwitcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
+      </div>
+      <button class='touch-date-reset' on:click={resetDate}>Reset Date</button>
+    </div>
   </div>
-<button class='touch-date-reset' on:click={resetDate}>Reset Date</button>
+</div>
 
