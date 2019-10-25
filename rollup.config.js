@@ -6,18 +6,18 @@ import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
 export default [
-	{
-		input: 'src/Swipe.svelte',
-		output: [
-			{ file: pkg.module, 'format': 'es' },
-			{ file: pkg.main, 'format': 'umd', name: 'DatePicker' }
-		],
-		plugins: [
-			svelte(),
-			commonjs(),
-      		resolve(),
-      		terser(),
-      		bundleSize()
-		]
-	}
+  {
+    input: 'src/DatePicker.svelte',
+    output: [
+      { file: pkg.module, 'format': 'es' },
+      { file: pkg.main, 'format': 'umd', name: 'DatePicker' }
+    ],
+    plugins: [
+      svelte(),
+      commonjs(),
+      resolve(),
+      terser(),
+      bundleSize()
+    ]
+  }
 ];
