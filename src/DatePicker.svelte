@@ -129,7 +129,7 @@
           <div class='touch-date-picker'>
             <DateSwitcher type='hours' data={HOURS} selected={date.getHours()} on:dateChange={dateChanged} }/>
             <DateSwitcher type='minutes' data={MINUTES} selected={date.getMinutes() + 1} on:dateChange={dateChanged}/>
-            <DateSwitcher type='year' data={['am', 'pm']} selected={'am'} on:dateChange={dateChanged}/>
+            <DateSwitcher type='year' data={MERIDIEM} selected={'am'} on:dateChange={dateChanged}/>
           </div>
         {/if}
         <div class='touch-date-reset'>
