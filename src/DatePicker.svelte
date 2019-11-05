@@ -72,6 +72,7 @@
   align-items: center;
   flex-direction: column;
   font: 20px 'Roboto', sans-serif;
+  padding: 1rem;
 }
 
 .touch-date-picker {
