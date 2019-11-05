@@ -46,20 +46,13 @@
 </script>
 
 <style>
-.date-line {
-  font-size: 30px;
-  font-weight: 300;
-}
-.day-line{
-  margin: 2px;
-}
-
 .touch-date-popup{
   position: absolute;
   top: 0;
   height: 100vh;
   width: 100vw;
   background: rgba(0, 0, 0, 0.3);
+  overscroll-behavior: none;
 }
 .touch-date-popup > div{
   background: white;
@@ -102,6 +95,13 @@
           transform: scale(0.95);
 }
 
+.date-line {
+  font-size: 30px;
+  font-weight: 300;
+}
+.day-line{
+  margin: 2px;
+}
   
 </style>
 
