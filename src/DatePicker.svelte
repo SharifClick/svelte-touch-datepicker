@@ -55,19 +55,20 @@
 }
 
 .touch-date-popup{
- position: absolute;
+  position: absolute;
   top: 0;
   height: 100vh;
   width: 100vw;
   background: rgba(0, 0, 0, 0.3);
 }
 .touch-date-popup > div{
-    background: white;
-    margin-top: 30vh;
-    width: 80%;
-    margin-left: 7%;
-    border-radius: 10px;
-    padding: 10px;
+  background: white;
+  width: 80%;
+  border-radius: 10px;
+  position: relative;
+  top: 50%;
+  transform: translate3d(9%, -50%, 0);
+  padding: 10px;
 }
 .touch-date-wrapper{
   display: flex;
