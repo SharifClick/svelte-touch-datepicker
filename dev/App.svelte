@@ -55,7 +55,7 @@
 <div class="container" >
   <div class="center">
     <p on:click={toggle}>{_date}</p>
-    <input type="text" value={_date} on:focus={toggle}>
+    <input type="text" readonly value={_date} on:focus={toggle}>
     <DatePicker bind:date bind:visible/>
   </div>
 </div>
