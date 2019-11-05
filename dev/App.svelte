@@ -25,7 +25,7 @@
 </script>
 
 <style>
-  .container, .is-stack{
+  .container{
     height: 100%;
     width: 100%;
   }

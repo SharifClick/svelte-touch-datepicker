@@ -1069,17 +1069,17 @@ var app = (function () {
     			input = element("input");
     			t2 = space();
     			datepicker.$$.fragment.c();
-    			attr_dev(p, "class", "svelte-1g5tyhp");
-    			add_location(p, file$2, 56, 4, 913);
+    			attr_dev(p, "class", "svelte-d89rv4");
+    			add_location(p, file$2, 56, 4, 902);
     			attr_dev(input, "type", "text");
     			input.readOnly = true;
     			input.value = ctx._date;
-    			attr_dev(input, "class", "svelte-1g5tyhp");
-    			add_location(input, file$2, 57, 4, 951);
-    			attr_dev(div0, "class", "center svelte-1g5tyhp");
-    			add_location(div0, file$2, 55, 2, 887);
-    			attr_dev(div1, "class", "container svelte-1g5tyhp");
-    			add_location(div1, file$2, 54, 0, 859);
+    			attr_dev(input, "class", "svelte-d89rv4");
+    			add_location(input, file$2, 57, 4, 940);
+    			attr_dev(div0, "class", "center svelte-d89rv4");
+    			add_location(div0, file$2, 55, 2, 876);
+    			attr_dev(div1, "class", "container svelte-d89rv4");
+    			add_location(div1, file$2, 54, 0, 848);
 
     			dispose = [
     				listen_dev(p, "click", ctx.toggle),
