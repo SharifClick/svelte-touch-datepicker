@@ -46,9 +46,12 @@
 </script>
 
 <style>
-.touch-date {
+.date-line {
   font-size: 30px;
   font-weight: 300;
+}
+.day-line{
+  margin: 2px;
 }
 
 .touch-date-popup{
@@ -106,8 +109,8 @@
   <div class="touch-date-popup" on:click={() => {visible = !visible}}>
     <div>
       <div class="touch-date-wrapper">
-        <div class='touch-date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
-        <p>{ WEEKDAY[date.getDay()] }</p>
+        <div class='date-line'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
+        <p class='day-line'>{ WEEKDAY[date.getDay()] }</p>
         <div class='touch-date-picker'>
           <DateSwitcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
           <DateSwitcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
