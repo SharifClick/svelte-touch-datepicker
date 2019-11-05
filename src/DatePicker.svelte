@@ -81,7 +81,7 @@
 .touch-date-picker {
   display: flex;
   padding: 50px 20px;
-  margin: 30px 0;
+  margin: 15px 0;
   overflow: hidden;
 }
 
