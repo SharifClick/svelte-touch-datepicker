@@ -671,9 +671,132 @@ var app = (function () {
 
     const file$1 = "src\\DatePicker.svelte";
 
-    // (104:0) {#if visible}
+    // (112:0) {#if visible}
     function create_if_block(ctx) {
-    	var div5, div4, div3, div0, t0_value = ctx.date.getDate() + "", t0, t1, t2_value = ctx.MONTHS[ctx.date.getMonth()] + "", t2, t3, t4_value = ctx.date.getFullYear() + "", t4, t5, p, t6_value = ctx.WEEKDAY[ctx.date.getDay()] + "", t6, t7, div1, t8, t9, t10, div2, button0, t12, button1, current, dispose;
+    	var div3, div2, div1, t0, t1, div0, button0, t3, button1, current, dispose;
+
+    	var if_block0 = (ctx.mode == 'date') && create_if_block_2(ctx);
+
+    	var if_block1 = (ctx.mode == 'time') && create_if_block_1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div3 = element("div");
+    			div2 = element("div");
+    			div1 = element("div");
+    			if (if_block0) if_block0.c();
+    			t0 = space();
+    			if (if_block1) if_block1.c();
+    			t1 = space();
+    			div0 = element("div");
+    			button0 = element("button");
+    			button0.textContent = "Reset";
+    			t3 = space();
+    			button1 = element("button");
+    			button1.textContent = "Ok";
+    			attr_dev(button0, "class", "svelte-930iyd");
+    			add_location(button0, file$1, 135, 10, 4011);
+    			attr_dev(button1, "class", "svelte-930iyd");
+    			add_location(button1, file$1, 136, 10, 4066);
+    			attr_dev(div0, "class", "touch-date-reset svelte-930iyd");
+    			add_location(div0, file$1, 134, 8, 3969);
+    			attr_dev(div1, "class", "touch-date-wrapper svelte-930iyd");
+    			add_location(div1, file$1, 114, 6, 2733);
+    			attr_dev(div2, "class", "svelte-930iyd");
+    			add_location(div2, file$1, 113, 4, 2720);
+    			attr_dev(div3, "class", "touch-date-popup svelte-930iyd");
+    			add_location(div3, file$1, 112, 2, 2646);
+
+    			dispose = [
+    				listen_dev(button0, "click", ctx.resetDate),
+    				listen_dev(button1, "click", ctx.click_handler),
+    				listen_dev(div3, "click", ctx.click_handler_1)
+    			];
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div3, anchor);
+    			append_dev(div3, div2);
+    			append_dev(div2, div1);
+    			if (if_block0) if_block0.m(div1, null);
+    			append_dev(div1, t0);
+    			if (if_block1) if_block1.m(div1, null);
+    			append_dev(div1, t1);
+    			append_dev(div1, div0);
+    			append_dev(div0, button0);
+    			append_dev(div0, t3);
+    			append_dev(div0, button1);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if (ctx.mode == 'date') {
+    				if (if_block0) {
+    					if_block0.p(changed, ctx);
+    					transition_in(if_block0, 1);
+    				} else {
+    					if_block0 = create_if_block_2(ctx);
+    					if_block0.c();
+    					transition_in(if_block0, 1);
+    					if_block0.m(div1, t0);
+    				}
+    			} else if (if_block0) {
+    				group_outros();
+    				transition_out(if_block0, 1, 1, () => {
+    					if_block0 = null;
+    				});
+    				check_outros();
+    			}
+
+    			if (ctx.mode == 'time') {
+    				if (if_block1) {
+    					if_block1.p(changed, ctx);
+    					transition_in(if_block1, 1);
+    				} else {
+    					if_block1 = create_if_block_1(ctx);
+    					if_block1.c();
+    					transition_in(if_block1, 1);
+    					if_block1.m(div1, t1);
+    				}
+    			} else if (if_block1) {
+    				group_outros();
+    				transition_out(if_block1, 1, 1, () => {
+    					if_block1 = null;
+    				});
+    				check_outros();
+    			}
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block0);
+    			transition_in(if_block1);
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(if_block0);
+    			transition_out(if_block1);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach_dev(div3);
+    			}
+
+    			if (if_block0) if_block0.d();
+    			if (if_block1) if_block1.d();
+    			run_all(dispose);
+    		}
+    	};
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block.name, type: "if", source: "(112:0) {#if visible}", ctx });
+    	return block;
+    }
+
+    // (116:8) {#if mode == 'date'}
+    function create_if_block_2(ctx) {
+    	var div0, t0_value = ctx.date.getDate() + "", t0, t1, t2_value = ctx.MONTHS[ctx.date.getMonth()] + "", t2, t3, t4_value = ctx.date.getFullYear() + "", t4, t5, p, t6_value = ctx.WEEKDAY[ctx.date.getDay()] + "", t6, t7, div1, t8, t9, current;
 
     	var dateswitcher0 = new DateSwitcher({
     		props: {
@@ -708,9 +831,6 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div5 = element("div");
-    			div4 = element("div");
-    			div3 = element("div");
     			div0 = element("div");
     			t0 = text(t0_value);
     			t1 = space();
@@ -727,63 +847,30 @@ var app = (function () {
     			dateswitcher1.$$.fragment.c();
     			t9 = space();
     			dateswitcher2.$$.fragment.c();
-    			t10 = space();
-    			div2 = element("div");
-    			button0 = element("button");
-    			button0.textContent = "Reset";
-    			t12 = space();
-    			button1 = element("button");
-    			button1.textContent = "Ok";
     			attr_dev(div0, "class", "touch-date svelte-930iyd");
-    			add_location(div0, file$1, 107, 8, 2580);
-    			add_location(p, file$1, 108, 8, 2689);
+    			add_location(div0, file$1, 116, 10, 2807);
+    			add_location(p, file$1, 117, 10, 2918);
     			attr_dev(div1, "class", "touch-date-picker svelte-930iyd");
-    			add_location(div1, file$1, 109, 8, 2732);
-    			attr_dev(button0, "class", "svelte-930iyd");
-    			add_location(button0, file$1, 115, 10, 3160);
-    			attr_dev(button1, "class", "svelte-930iyd");
-    			add_location(button1, file$1, 116, 10, 3215);
-    			attr_dev(div2, "class", "touch-date-reset svelte-930iyd");
-    			add_location(div2, file$1, 114, 8, 3118);
-    			attr_dev(div3, "class", "touch-date-wrapper svelte-930iyd");
-    			add_location(div3, file$1, 106, 6, 2538);
-    			attr_dev(div4, "class", "svelte-930iyd");
-    			add_location(div4, file$1, 105, 4, 2525);
-    			attr_dev(div5, "class", "touch-date-popup svelte-930iyd");
-    			add_location(div5, file$1, 104, 2, 2451);
-
-    			dispose = [
-    				listen_dev(button0, "click", ctx.resetDate),
-    				listen_dev(button1, "click", ctx.click_handler),
-    				listen_dev(div5, "click", ctx.click_handler_1)
-    			];
+    			add_location(div1, file$1, 118, 10, 2963);
     		},
 
     		m: function mount(target, anchor) {
-    			insert_dev(target, div5, anchor);
-    			append_dev(div5, div4);
-    			append_dev(div4, div3);
-    			append_dev(div3, div0);
+    			insert_dev(target, div0, anchor);
     			append_dev(div0, t0);
     			append_dev(div0, t1);
     			append_dev(div0, t2);
     			append_dev(div0, t3);
     			append_dev(div0, t4);
-    			append_dev(div3, t5);
-    			append_dev(div3, p);
+    			insert_dev(target, t5, anchor);
+    			insert_dev(target, p, anchor);
     			append_dev(p, t6);
-    			append_dev(div3, t7);
-    			append_dev(div3, div1);
+    			insert_dev(target, t7, anchor);
+    			insert_dev(target, div1, anchor);
     			mount_component(dateswitcher0, div1, null);
     			append_dev(div1, t8);
     			mount_component(dateswitcher1, div1, null);
     			append_dev(div1, t9);
     			mount_component(dateswitcher2, div1, null);
-    			append_dev(div3, t10);
-    			append_dev(div3, div2);
-    			append_dev(div2, button0);
-    			append_dev(div2, t12);
-    			append_dev(div2, button1);
     			current = true;
     		},
 
@@ -838,7 +925,11 @@ var app = (function () {
 
     		d: function destroy(detaching) {
     			if (detaching) {
-    				detach_dev(div5);
+    				detach_dev(div0);
+    				detach_dev(t5);
+    				detach_dev(p);
+    				detach_dev(t7);
+    				detach_dev(div1);
     			}
 
     			destroy_component(dateswitcher0);
@@ -846,11 +937,153 @@ var app = (function () {
     			destroy_component(dateswitcher1);
 
     			destroy_component(dateswitcher2);
-
-    			run_all(dispose);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block.name, type: "if", source: "(104:0) {#if visible}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block_2.name, type: "if", source: "(116:8) {#if mode == 'date'}", ctx });
+    	return block;
+    }
+
+    // (126:8) {#if mode == 'time'}
+    function create_if_block_1(ctx) {
+    	var div0, t0_value = ctx.date.getDate() + "", t0, t1, t2_value = ctx.MONTHS[ctx.date.getMonth()] + "", t2, t3, t4_value = ctx.date.getFullYear() + "", t4, t5, p, t6_value = ctx.WEEKDAY[ctx.date.getDay()] + "", t6, t7, div1, t8, t9, current;
+
+    	var dateswitcher0 = new DateSwitcher({
+    		props: {
+    		type: "hours",
+    		data: ctx.HOURS,
+    		selected: ctx.date.getHours(),
+    		"}": true
+    	},
+    		$$inline: true
+    	});
+    	dateswitcher0.$on("dateChange", ctx.dateChanged);
+
+    	var dateswitcher1 = new DateSwitcher({
+    		props: {
+    		type: "minutes",
+    		data: ctx.MINUTES,
+    		selected: ctx.date.getMinutes() + 1
+    	},
+    		$$inline: true
+    	});
+    	dateswitcher1.$on("dateChange", ctx.dateChanged);
+
+    	var dateswitcher2 = new DateSwitcher({
+    		props: {
+    		type: "year",
+    		data: ctx.MERIDIEM,
+    		selected: 'am'
+    	},
+    		$$inline: true
+    	});
+    	dateswitcher2.$on("dateChange", ctx.dateChanged);
+
+    	const block = {
+    		c: function create() {
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			t2 = text(t2_value);
+    			t3 = space();
+    			t4 = text(t4_value);
+    			t5 = space();
+    			p = element("p");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div1 = element("div");
+    			dateswitcher0.$$.fragment.c();
+    			t8 = space();
+    			dateswitcher1.$$.fragment.c();
+    			t9 = space();
+    			dateswitcher2.$$.fragment.c();
+    			attr_dev(div0, "class", "touch-date svelte-930iyd");
+    			add_location(div0, file$1, 126, 10, 3406);
+    			add_location(p, file$1, 127, 10, 3517);
+    			attr_dev(div1, "class", "touch-date-picker svelte-930iyd");
+    			add_location(div1, file$1, 128, 10, 3562);
+    		},
+
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div0, anchor);
+    			append_dev(div0, t0);
+    			append_dev(div0, t1);
+    			append_dev(div0, t2);
+    			append_dev(div0, t3);
+    			append_dev(div0, t4);
+    			insert_dev(target, t5, anchor);
+    			insert_dev(target, p, anchor);
+    			append_dev(p, t6);
+    			insert_dev(target, t7, anchor);
+    			insert_dev(target, div1, anchor);
+    			mount_component(dateswitcher0, div1, null);
+    			append_dev(div1, t8);
+    			mount_component(dateswitcher1, div1, null);
+    			append_dev(div1, t9);
+    			mount_component(dateswitcher2, div1, null);
+    			current = true;
+    		},
+
+    		p: function update(changed, ctx) {
+    			if ((!current || changed.date) && t0_value !== (t0_value = ctx.date.getDate() + "")) {
+    				set_data_dev(t0, t0_value);
+    			}
+
+    			if ((!current || changed.date) && t2_value !== (t2_value = ctx.MONTHS[ctx.date.getMonth()] + "")) {
+    				set_data_dev(t2, t2_value);
+    			}
+
+    			if ((!current || changed.date) && t4_value !== (t4_value = ctx.date.getFullYear() + "")) {
+    				set_data_dev(t4, t4_value);
+    			}
+
+    			if ((!current || changed.date) && t6_value !== (t6_value = ctx.WEEKDAY[ctx.date.getDay()] + "")) {
+    				set_data_dev(t6, t6_value);
+    			}
+
+    			var dateswitcher0_changes = {};
+    			if (changed.date) dateswitcher0_changes.selected = ctx.date.getHours();
+    			dateswitcher0.$set(dateswitcher0_changes);
+
+    			var dateswitcher1_changes = {};
+    			if (changed.date) dateswitcher1_changes.selected = ctx.date.getMinutes() + 1;
+    			dateswitcher1.$set(dateswitcher1_changes);
+    		},
+
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(dateswitcher0.$$.fragment, local);
+
+    			transition_in(dateswitcher1.$$.fragment, local);
+
+    			transition_in(dateswitcher2.$$.fragment, local);
+
+    			current = true;
+    		},
+
+    		o: function outro(local) {
+    			transition_out(dateswitcher0.$$.fragment, local);
+    			transition_out(dateswitcher1.$$.fragment, local);
+    			transition_out(dateswitcher2.$$.fragment, local);
+    			current = false;
+    		},
+
+    		d: function destroy(detaching) {
+    			if (detaching) {
+    				detach_dev(div0);
+    				detach_dev(t5);
+    				detach_dev(p);
+    				detach_dev(t7);
+    				detach_dev(div1);
+    			}
+
+    			destroy_component(dateswitcher0);
+
+    			destroy_component(dateswitcher1);
+
+    			destroy_component(dateswitcher2);
+    		}
+    	};
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block_1.name, type: "if", source: "(126:8) {#if mode == 'time'}", ctx });
     	return block;
     }
 
@@ -923,6 +1156,13 @@ var app = (function () {
       const YEARS = new Array(201).fill(1900).map((v, i) => v + i);
       const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+      let { mode = 'time' } = $$props;
+
+      const HOURS = new Array(24).fill(1).map((v, i) => v + i);
+      const MINUTES = new Array(60).fill(1).map((v, i) => v + i);
+
+      const MERIDIEM = ['am', 'pm'];
+
       let { date = new Date(), visible = false } = $$props;
 
       let resetDate = (event) => {
@@ -957,7 +1197,7 @@ var app = (function () {
         $$invalidate('date', date = newDate);
       };
 
-    	const writable_props = ['date', 'visible'];
+    	const writable_props = ['mode', 'date', 'visible'];
     	Object.keys($$props).forEach(key => {
     		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<DatePicker> was created with unknown prop '${key}'`);
     	});
@@ -967,15 +1207,17 @@ var app = (function () {
     	const click_handler_1 = () => {$$invalidate('visible', visible = !visible);};
 
     	$$self.$set = $$props => {
+    		if ('mode' in $$props) $$invalidate('mode', mode = $$props.mode);
     		if ('date' in $$props) $$invalidate('date', date = $$props.date);
     		if ('visible' in $$props) $$invalidate('visible', visible = $$props.visible);
     	};
 
     	$$self.$capture_state = () => {
-    		return { date, visible, resetDate, dateChanged, DAYS };
+    		return { mode, date, visible, resetDate, dateChanged, DAYS };
     	};
 
     	$$self.$inject_state = $$props => {
+    		if ('mode' in $$props) $$invalidate('mode', mode = $$props.mode);
     		if ('date' in $$props) $$invalidate('date', date = $$props.date);
     		if ('visible' in $$props) $$invalidate('visible', visible = $$props.visible);
     		if ('resetDate' in $$props) $$invalidate('resetDate', resetDate = $$props.resetDate);
@@ -993,6 +1235,10 @@ var app = (function () {
     		MONTHS,
     		YEARS,
     		WEEKDAY,
+    		mode,
+    		HOURS,
+    		MINUTES,
+    		MERIDIEM,
     		date,
     		visible,
     		resetDate,
@@ -1006,8 +1252,16 @@ var app = (function () {
     class DatePicker extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["date", "visible"]);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["mode", "date", "visible"]);
     		dispatch_dev("SvelteRegisterComponent", { component: this, tagName: "DatePicker", options, id: create_fragment$1.name });
+    	}
+
+    	get mode() {
+    		throw new Error("<DatePicker>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set mode(value) {
+    		throw new Error("<DatePicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
     	get date() {
