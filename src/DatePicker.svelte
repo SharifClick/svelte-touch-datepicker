@@ -1,5 +1,5 @@
 <script>
-  
+
   import DateSwitcher from './DateSwitcher.svelte';
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
@@ -8,8 +8,8 @@
 
   export let mode = 'time';
 
-  const HOURS = new Array(24).fill(1).map((v, i) => v + i);
-  const MINUTES = new Array(60).fill(1).map((v, i) => v + i);
+  const HOURS = new Array(12).fill(1).map((v, i) => v + i);
+  const MINUTES = new Array(59).fill(1).map((v, i) => v + i);
 
   const MERIDIEM = ['am', 'pm'];
 
@@ -28,29 +28,29 @@
 
     let {type, changedData} = event.detail;
     let newDate;
-    
+
     if (type === 'day') {
-    
+
       newDate = new Date(date.getFullYear(), date.getMonth(), changedData + 1)
-    
+
     } else if (type === 'month') {
-      
+
       let maxDayInSelectedMonth = new Date(date.getFullYear(), changedData + 1, 0).getDate()
       let day = Math.min(date.getDate(), maxDayInSelectedMonth)
-      
+
       newDate = new Date(date.getFullYear(), changedData, day)
-    
+
     } else if (type === 'year') {
-      
+
       let maxDayInSelectedMonth = new Date(1900 + changedData, date.getMonth() + 1, 0).getDate()
       let day = Math.min(date.getDate(), maxDayInSelectedMonth)
       newDate = new Date(1900 + changedData, date.getMonth(), day)
-    
+
     }
 
     date = newDate;
   }
-  
+
 </script>
 
 <style>
@@ -105,7 +105,7 @@
           transform: scale(0.95);
 }
 
-  
+
 </style>
 
 
