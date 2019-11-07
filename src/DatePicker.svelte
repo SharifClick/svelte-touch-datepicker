@@ -7,11 +7,11 @@
   const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   export let mode = 'time';
-
+  let m = 1;
   const HOURS = new Array(12).fill(1).map((v, i) => v + i);
   const MINUTES = new Array(59).fill(1).map((v, i) => v + i);
 
-  const MERIDIEM = ['am', 'pm'];
+  const MERIDIEM = ['AM', 'PM'];
 
 
   $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((v, i) => v + i)
@@ -27,7 +27,7 @@
   let dateChanged = (event) => {
 
     let {type, changedData} = event.detail;
-    let newDate;
+    let newDate = new Date();
 
     if (type === 'day') {
 
@@ -37,7 +37,6 @@
 
       let maxDayInSelectedMonth = new Date(date.getFullYear(), changedData + 1, 0).getDate()
       let day = Math.min(date.getDate(), maxDayInSelectedMonth)
-
       newDate = new Date(date.getFullYear(), changedData, day)
 
     } else if (type === 'year') {
@@ -46,6 +45,21 @@
       let day = Math.min(date.getDate(), maxDayInSelectedMonth)
       newDate = new Date(1900 + changedData, date.getMonth(), day)
 
+    } else if (type === 'hours'){
+
+      newDate.setHours(changedData + 13);
+      newDate.setMinutes(date.getMinutes())
+
+    } else if (type === 'minutes'){
+
+      newDate.setHours(date.getHours())
+      newDate.setMinutes(changedData + 1)
+
+    } else if (type === 'meridiem'){
+
+      newDate.setHours(date.getHours())
+      newDate.setMinutes(date.getMinutes())
+      m = changedData
     }
 
     date = newDate;
@@ -110,7 +124,7 @@
 
 
 {#if visible}
-  <div class="touch-date-popup" on:click={() => {visible = !visible}}>
+  <div class="touch-date-popup" >
     <div>
       <div class="touch-date-wrapper">
         {#if mode == 'date'}
@@ -124,12 +138,11 @@
         {/if}
 
         {#if mode == 'time'}
-          <div class='touch-date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
-          <p>{ WEEKDAY[date.getDay()] }</p>
+          <div class='touch-date'>{ date.getHours() - 12 }:{ date.getMinutes() } { MERIDIEM[m] }</div>
           <div class='touch-date-picker'>
             <DateSwitcher type='hours' data={HOURS} selected={date.getHours() - 12 } on:dateChange={dateChanged} }/>
             <DateSwitcher type='minutes' data={MINUTES} selected={date.getMinutes() } on:dateChange={dateChanged}/>
-            <DateSwitcher type='meridiem' data={MERIDIEM} selected={'am'} on:dateChange={dateChanged}/>
+            <DateSwitcher type='meridiem' data={MERIDIEM} selected={m+1} on:dateChange={dateChanged}/>
           </div>
         {/if}
         <div class='touch-date-reset'>
