@@ -127,9 +127,9 @@
           <div class='touch-date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
           <p>{ WEEKDAY[date.getDay()] }</p>
           <div class='touch-date-picker'>
-            <DateSwitcher type='hours' data={HOURS} selected={date.getHours()} on:dateChange={dateChanged} }/>
-            <DateSwitcher type='minutes' data={MINUTES} selected={date.getMinutes() + 1} on:dateChange={dateChanged}/>
-            <DateSwitcher type='year' data={MERIDIEM} selected={'am'} on:dateChange={dateChanged}/>
+            <DateSwitcher type='hours' data={HOURS} selected={date.getHours() - 12 } on:dateChange={dateChanged} }/>
+            <DateSwitcher type='minutes' data={MINUTES} selected={date.getMinutes() } on:dateChange={dateChanged}/>
+            <DateSwitcher type='meridiem' data={MERIDIEM} selected={'am'} on:dateChange={dateChanged}/>
           </div>
         {/if}
         <div class='touch-date-reset'>

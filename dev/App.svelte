@@ -2,7 +2,7 @@
   import { afterUpdate} from 'svelte';
   import DatePicker  from "../src/index.js";
 
-  let date = new Date('Sat Oct 31 2019');
+  let date = new Date();
   let visible = false;
   let inputDate;
 
@@ -18,7 +18,7 @@
   $: _inputdate = new Date(inputDate);
 
 
- 
+
 
 
 
@@ -49,7 +49,7 @@
     flex-direction: column;
     font: 20px 'Roboto', sans-serif;
   }
-  
+
 </style>
 
 <div class="container" >
