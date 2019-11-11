@@ -7,7 +7,7 @@
   let inputDate;
 
   afterUpdate(() => {
-	  console.log(date);
+	  
   });
 
   function toggle(){

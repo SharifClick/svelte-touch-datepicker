@@ -79,7 +79,7 @@
     window.removeEventListener('touchend', onMouseUp);
 
     setPosition();
-    onDateChange(type, -finalPosition / 50)
+    onDateChange(type, -finalPosition / 50);
   }
 
 
