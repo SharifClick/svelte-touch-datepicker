@@ -21,7 +21,6 @@
 
 
 
-
 </script>
 
 <style>
@@ -49,7 +48,6 @@
     flex-direction: column;
     font: 20px 'Roboto', sans-serif;
   }
-
 </style>
 
 <div class="container" >
