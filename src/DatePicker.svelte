@@ -47,21 +47,21 @@
 
 <style>
 .touch-date-popup{
-  position: absolute;
-  top: 0;
-  height: 100vh;
-  width: 100vw;
+  z-index: 1;
+  position: fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
   background: rgba(0, 0, 0, 0.3);
-  overscroll-behavior: none;
 }
 .touch-date-popup > div{
   background: white;
-  width: 80%;
+  color: #000000;
+  margin-top: 30vh;
+  width: 85%;
+  margin-left: 7%;
   border-radius: 10px;
-  position: relative;
-  top: 50%;
-  transform: translate3d(9%, -50%, 0);
-  padding: 10px;
 }
 .touch-date-wrapper{
   display: flex;
@@ -75,7 +75,7 @@
 .touch-date-picker {
   display: flex;
   padding: 50px 20px;
-  margin: 15px 0;
+  margin: 10px 0;
   overflow: hidden;
 }
 
