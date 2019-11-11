@@ -54,6 +54,7 @@
   right:0;
   bottom:0;
   background: rgba(0, 0, 0, 0.3);
+  overscroll-behavior: none;
 }
 .touch-date-popup > div{
   background: white;
