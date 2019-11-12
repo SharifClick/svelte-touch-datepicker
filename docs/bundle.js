@@ -671,7 +671,7 @@ var app = (function () {
 
     const file$1 = "src\\DatePicker.svelte";
 
-    // (112:0) {#if visible}
+    // (118:0) {#if visible}
     function create_if_block(ctx) {
     	var div3, div2, div1, t0, t1, div0, button0, t3, button1, current, dispose;
 
@@ -694,23 +694,22 @@ var app = (function () {
     			t3 = space();
     			button1 = element("button");
     			button1.textContent = "Ok";
-    			attr_dev(button0, "class", "svelte-930iyd");
-    			add_location(button0, file$1, 135, 10, 4011);
-    			attr_dev(button1, "class", "svelte-930iyd");
-    			add_location(button1, file$1, 136, 10, 4066);
-    			attr_dev(div0, "class", "touch-date-reset svelte-930iyd");
-    			add_location(div0, file$1, 134, 8, 3969);
-    			attr_dev(div1, "class", "touch-date-wrapper svelte-930iyd");
-    			add_location(div1, file$1, 114, 6, 2733);
-    			attr_dev(div2, "class", "svelte-930iyd");
-    			add_location(div2, file$1, 113, 4, 2720);
-    			attr_dev(div3, "class", "touch-date-popup svelte-930iyd");
-    			add_location(div3, file$1, 112, 2, 2646);
+    			attr_dev(button0, "class", "svelte-1j6rpje");
+    			add_location(button0, file$1, 140, 10, 4292);
+    			attr_dev(button1, "class", "svelte-1j6rpje");
+    			add_location(button1, file$1, 141, 10, 4347);
+    			attr_dev(div0, "class", "touch-date-reset svelte-1j6rpje");
+    			add_location(div0, file$1, 139, 8, 4250);
+    			attr_dev(div1, "class", "touch-date-wrapper svelte-1j6rpje");
+    			add_location(div1, file$1, 120, 6, 3060);
+    			attr_dev(div2, "class", "svelte-1j6rpje");
+    			add_location(div2, file$1, 119, 4, 3047);
+    			attr_dev(div3, "class", "touch-date-popup svelte-1j6rpje");
+    			add_location(div3, file$1, 118, 2, 3010);
 
     			dispose = [
     				listen_dev(button0, "click", ctx.resetDate),
-    				listen_dev(button1, "click", ctx.click_handler),
-    				listen_dev(div3, "click", ctx.click_handler_1)
+    				listen_dev(button1, "click", ctx.click_handler)
     			];
     		},
 
@@ -790,11 +789,11 @@ var app = (function () {
     			run_all(dispose);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block.name, type: "if", source: "(112:0) {#if visible}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block.name, type: "if", source: "(118:0) {#if visible}", ctx });
     	return block;
     }
 
-    // (116:8) {#if mode == 'date'}
+    // (122:8) {#if mode == 'date'}
     function create_if_block_2(ctx) {
     	var div0, t0_value = ctx.date.getDate() + "", t0, t1, t2_value = ctx.MONTHS[ctx.date.getMonth()] + "", t2, t3, t4_value = ctx.date.getFullYear() + "", t4, t5, p, t6_value = ctx.WEEKDAY[ctx.date.getDay()] + "", t6, t7, div1, t8, t9, current;
 
@@ -847,11 +846,11 @@ var app = (function () {
     			dateswitcher1.$$.fragment.c();
     			t9 = space();
     			dateswitcher2.$$.fragment.c();
-    			attr_dev(div0, "class", "touch-date svelte-930iyd");
-    			add_location(div0, file$1, 116, 10, 2807);
-    			add_location(p, file$1, 117, 10, 2918);
-    			attr_dev(div1, "class", "touch-date-picker svelte-930iyd");
-    			add_location(div1, file$1, 118, 10, 2963);
+    			attr_dev(div0, "class", "touch-date svelte-1j6rpje");
+    			add_location(div0, file$1, 122, 10, 3134);
+    			add_location(p, file$1, 123, 10, 3245);
+    			attr_dev(div1, "class", "touch-date-picker svelte-1j6rpje");
+    			add_location(div1, file$1, 124, 10, 3290);
     		},
 
     		m: function mount(target, anchor) {
@@ -939,19 +938,19 @@ var app = (function () {
     			destroy_component(dateswitcher2);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block_2.name, type: "if", source: "(116:8) {#if mode == 'date'}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block_2.name, type: "if", source: "(122:8) {#if mode == 'date'}", ctx });
     	return block;
     }
 
-    // (126:8) {#if mode == 'time'}
+    // (132:8) {#if mode == 'time'}
     function create_if_block_1(ctx) {
-    	var div0, t0_value = ctx.date.getDate() + "", t0, t1, t2_value = ctx.MONTHS[ctx.date.getMonth()] + "", t2, t3, t4_value = ctx.date.getFullYear() + "", t4, t5, p, t6_value = ctx.WEEKDAY[ctx.date.getDay()] + "", t6, t7, div1, t8, t9, current;
+    	var div0, t0_value = ctx.date.getHours() - 12 + "", t0, t1, t2_value = ctx.date.getMinutes() + "", t2, t3, t4_value = ctx.MERIDIEM[ctx.m] + "", t4, t5, div1, t6, t7, current;
 
     	var dateswitcher0 = new DateSwitcher({
     		props: {
     		type: "hours",
     		data: ctx.HOURS,
-    		selected: ctx.date.getHours(),
+    		selected: ctx.date.getHours() - 12,
     		"}": true
     	},
     		$$inline: true
@@ -962,7 +961,7 @@ var app = (function () {
     		props: {
     		type: "minutes",
     		data: ctx.MINUTES,
-    		selected: ctx.date.getMinutes() + 1
+    		selected: ctx.date.getMinutes()
     	},
     		$$inline: true
     	});
@@ -970,9 +969,9 @@ var app = (function () {
 
     	var dateswitcher2 = new DateSwitcher({
     		props: {
-    		type: "year",
+    		type: "meridiem",
     		data: ctx.MERIDIEM,
-    		selected: 'am'
+    		selected: ctx.m+1
     	},
     		$$inline: true
     	});
@@ -982,25 +981,21 @@ var app = (function () {
     		c: function create() {
     			div0 = element("div");
     			t0 = text(t0_value);
-    			t1 = space();
+    			t1 = text(":");
     			t2 = text(t2_value);
     			t3 = space();
     			t4 = text(t4_value);
     			t5 = space();
-    			p = element("p");
-    			t6 = text(t6_value);
-    			t7 = space();
     			div1 = element("div");
     			dateswitcher0.$$.fragment.c();
-    			t8 = space();
+    			t6 = space();
     			dateswitcher1.$$.fragment.c();
-    			t9 = space();
+    			t7 = space();
     			dateswitcher2.$$.fragment.c();
-    			attr_dev(div0, "class", "touch-date svelte-930iyd");
-    			add_location(div0, file$1, 126, 10, 3406);
-    			add_location(p, file$1, 127, 10, 3517);
-    			attr_dev(div1, "class", "touch-date-picker svelte-930iyd");
-    			add_location(div1, file$1, 128, 10, 3562);
+    			attr_dev(div0, "class", "touch-date svelte-1j6rpje");
+    			add_location(div0, file$1, 132, 10, 3733);
+    			attr_dev(div1, "class", "touch-date-picker svelte-1j6rpje");
+    			add_location(div1, file$1, 133, 10, 3837);
     		},
 
     		m: function mount(target, anchor) {
@@ -1011,42 +1006,39 @@ var app = (function () {
     			append_dev(div0, t3);
     			append_dev(div0, t4);
     			insert_dev(target, t5, anchor);
-    			insert_dev(target, p, anchor);
-    			append_dev(p, t6);
-    			insert_dev(target, t7, anchor);
     			insert_dev(target, div1, anchor);
     			mount_component(dateswitcher0, div1, null);
-    			append_dev(div1, t8);
+    			append_dev(div1, t6);
     			mount_component(dateswitcher1, div1, null);
-    			append_dev(div1, t9);
+    			append_dev(div1, t7);
     			mount_component(dateswitcher2, div1, null);
     			current = true;
     		},
 
     		p: function update(changed, ctx) {
-    			if ((!current || changed.date) && t0_value !== (t0_value = ctx.date.getDate() + "")) {
+    			if ((!current || changed.date) && t0_value !== (t0_value = ctx.date.getHours() - 12 + "")) {
     				set_data_dev(t0, t0_value);
     			}
 
-    			if ((!current || changed.date) && t2_value !== (t2_value = ctx.MONTHS[ctx.date.getMonth()] + "")) {
+    			if ((!current || changed.date) && t2_value !== (t2_value = ctx.date.getMinutes() + "")) {
     				set_data_dev(t2, t2_value);
     			}
 
-    			if ((!current || changed.date) && t4_value !== (t4_value = ctx.date.getFullYear() + "")) {
+    			if ((!current || changed.m) && t4_value !== (t4_value = ctx.MERIDIEM[ctx.m] + "")) {
     				set_data_dev(t4, t4_value);
     			}
 
-    			if ((!current || changed.date) && t6_value !== (t6_value = ctx.WEEKDAY[ctx.date.getDay()] + "")) {
-    				set_data_dev(t6, t6_value);
-    			}
-
     			var dateswitcher0_changes = {};
-    			if (changed.date) dateswitcher0_changes.selected = ctx.date.getHours();
+    			if (changed.date) dateswitcher0_changes.selected = ctx.date.getHours() - 12;
     			dateswitcher0.$set(dateswitcher0_changes);
 
     			var dateswitcher1_changes = {};
-    			if (changed.date) dateswitcher1_changes.selected = ctx.date.getMinutes() + 1;
+    			if (changed.date) dateswitcher1_changes.selected = ctx.date.getMinutes();
     			dateswitcher1.$set(dateswitcher1_changes);
+
+    			var dateswitcher2_changes = {};
+    			if (changed.m) dateswitcher2_changes.selected = ctx.m+1;
+    			dateswitcher2.$set(dateswitcher2_changes);
     		},
 
     		i: function intro(local) {
@@ -1071,8 +1063,6 @@ var app = (function () {
     			if (detaching) {
     				detach_dev(div0);
     				detach_dev(t5);
-    				detach_dev(p);
-    				detach_dev(t7);
     				detach_dev(div1);
     			}
 
@@ -1083,7 +1073,7 @@ var app = (function () {
     			destroy_component(dateswitcher2);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block_1.name, type: "if", source: "(126:8) {#if mode == 'time'}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block_1.name, type: "if", source: "(132:8) {#if mode == 'time'}", ctx });
     	return block;
     }
 
@@ -1157,11 +1147,11 @@ var app = (function () {
       const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
       let { mode = 'time' } = $$props;
+      let m = 1;
+      const HOURS = new Array(12).fill(1).map((v, i) => v + i);
+      const MINUTES = new Array(59).fill(1).map((v, i) => v + i);
 
-      const HOURS = new Array(24).fill(1).map((v, i) => v + i);
-      const MINUTES = new Array(60).fill(1).map((v, i) => v + i);
-
-      const MERIDIEM = ['am', 'pm'];
+      const MERIDIEM = ['AM', 'PM'];
 
       let { date = new Date(), visible = false } = $$props;
 
@@ -1173,25 +1163,34 @@ var app = (function () {
       let dateChanged = (event) => {
 
         let {type, changedData} = event.detail;
-        let newDate;
-        
+        let newDate = new Date();
+
         if (type === 'day') {
-        
           newDate = new Date(date.getFullYear(), date.getMonth(), changedData + 1);
-        
         } else if (type === 'month') {
-          
           let maxDayInSelectedMonth = new Date(date.getFullYear(), changedData + 1, 0).getDate();
           let day = Math.min(date.getDate(), maxDayInSelectedMonth);
-          
           newDate = new Date(date.getFullYear(), changedData, day);
-        
         } else if (type === 'year') {
-          
           let maxDayInSelectedMonth = new Date(1900 + changedData, date.getMonth() + 1, 0).getDate();
           let day = Math.min(date.getDate(), maxDayInSelectedMonth);
           newDate = new Date(1900 + changedData, date.getMonth(), day);
-        
+
+        } else if (type === 'hours'){
+
+          newDate.setHours(changedData + 13);
+          newDate.setMinutes(date.getMinutes());
+
+        } else if (type === 'minutes'){
+
+          newDate.setHours(date.getHours());
+          newDate.setMinutes(changedData + 1);
+
+        } else if (type === 'meridiem'){
+
+          newDate.setHours(date.getHours());
+          newDate.setMinutes(date.getMinutes());
+          $$invalidate('m', m = changedData);
         }
 
         $$invalidate('date', date = newDate);
@@ -1204,8 +1203,6 @@ var app = (function () {
 
     	const click_handler = () => {$$invalidate('visible', visible = !visible);};
 
-    	const click_handler_1 = () => {$$invalidate('visible', visible = !visible);};
-
     	$$self.$set = $$props => {
     		if ('mode' in $$props) $$invalidate('mode', mode = $$props.mode);
     		if ('date' in $$props) $$invalidate('date', date = $$props.date);
@@ -1213,11 +1210,12 @@ var app = (function () {
     	};
 
     	$$self.$capture_state = () => {
-    		return { mode, date, visible, resetDate, dateChanged, DAYS };
+    		return { mode, m, date, visible, resetDate, dateChanged, DAYS };
     	};
 
     	$$self.$inject_state = $$props => {
     		if ('mode' in $$props) $$invalidate('mode', mode = $$props.mode);
+    		if ('m' in $$props) $$invalidate('m', m = $$props.m);
     		if ('date' in $$props) $$invalidate('date', date = $$props.date);
     		if ('visible' in $$props) $$invalidate('visible', visible = $$props.visible);
     		if ('resetDate' in $$props) $$invalidate('resetDate', resetDate = $$props.resetDate);
@@ -1236,6 +1234,7 @@ var app = (function () {
     		YEARS,
     		WEEKDAY,
     		mode,
+    		m,
     		HOURS,
     		MINUTES,
     		MERIDIEM,
@@ -1244,8 +1243,7 @@ var app = (function () {
     		resetDate,
     		dateChanged,
     		DAYS,
-    		click_handler,
-    		click_handler_1
+    		click_handler
     	};
     }
 
@@ -1322,16 +1320,16 @@ var app = (function () {
     			input = element("input");
     			t2 = space();
     			datepicker.$$.fragment.c();
-    			attr_dev(p, "class", "svelte-1g5tyhp");
-    			add_location(p, file$2, 56, 4, 913);
+    			attr_dev(p, "class", "svelte-1hocbqs");
+    			add_location(p, file$2, 54, 4, 889);
     			attr_dev(input, "type", "text");
     			input.value = ctx._date;
-    			attr_dev(input, "class", "svelte-1g5tyhp");
-    			add_location(input, file$2, 57, 4, 951);
-    			attr_dev(div0, "class", "center svelte-1g5tyhp");
-    			add_location(div0, file$2, 55, 2, 887);
-    			attr_dev(div1, "class", "container svelte-1g5tyhp");
-    			add_location(div1, file$2, 54, 0, 859);
+    			attr_dev(input, "class", "svelte-1hocbqs");
+    			add_location(input, file$2, 55, 4, 927);
+    			attr_dev(div0, "class", "center svelte-1hocbqs");
+    			add_location(div0, file$2, 53, 2, 863);
+    			attr_dev(div1, "class", "container svelte-1hocbqs");
+    			add_location(div1, file$2, 52, 0, 835);
 
     			dispose = [
     				listen_dev(p, "click", ctx.toggle),
@@ -1400,7 +1398,7 @@ var app = (function () {
     function instance$2($$self, $$props, $$invalidate) {
     	
 
-      let date = new Date('Sat Oct 31 2019');
+      let date = new Date();
       let visible = false;
       let inputDate;
 
