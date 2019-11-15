@@ -1,5 +1,4 @@
 <script>
-  
   import DateSwitcher from './DateSwitcher.svelte';
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
@@ -19,30 +18,23 @@
   let dateChanged = (event) => {
 
     let {type, changedData} = event.detail;
-    let newDate;
-    
+    let newDate = new Date();
+
     if (type === 'day') {
-    
       newDate = new Date(date.getFullYear(), date.getMonth(), changedData + 1)
-    
     } else if (type === 'month') {
-      
       let maxDayInSelectedMonth = new Date(date.getFullYear(), changedData + 1, 0).getDate()
       let day = Math.min(date.getDate(), maxDayInSelectedMonth)
-      
       newDate = new Date(date.getFullYear(), changedData, day)
-    
     } else if (type === 'year') {
-      
       let maxDayInSelectedMonth = new Date(1900 + changedData, date.getMonth() + 1, 0).getDate()
       let day = Math.min(date.getDate(), maxDayInSelectedMonth)
       newDate = new Date(1900 + changedData, date.getMonth(), day)
-    
+
     }
 
     date = newDate;
   }
-  
 </script>
 
 <style>
@@ -108,7 +100,7 @@
 
 
 {#if visible}
-  <div class="touch-date-popup" on:click={() => {visible = !visible}}>
+  <div class="touch-date-popup" >
     <div>
       <div class="touch-date-wrapper">
         <div class='date-line'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
