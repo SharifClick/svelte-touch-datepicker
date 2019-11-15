@@ -1,8 +1,10 @@
 <script>
   import { afterUpdate} from 'svelte';
-  import DatePicker  from "../src/index.js";
+  import {DatePicker, TimePicker}  from "../src/index.js";
 
-  let date = new Date('Sat Oct 31 2019');
+  export let mode = 'time';
+
+  let date = new Date();
   let visible = false;
   let inputDate;
 
@@ -18,7 +20,6 @@
   $: _inputdate = new Date(inputDate);
 
 
- 
 
 
 
@@ -49,14 +50,17 @@
     flex-direction: column;
     font: 20px 'Roboto', sans-serif;
   }
-  
 </style>
 
 <div class="container" >
   <div class="center">
     <p on:click={toggle}>{_date}</p>
     <input type="text" value={_date} on:focus={toggle}>
-    <DatePicker bind:date bind:visible/>
+    {#if mode == 'date'}
+      <DatePicker bind:date bind:visible/>
+    {:else}
+      <TimePicker bind:date bind:visible/>
+    {/if}
   </div>
 </div>
 

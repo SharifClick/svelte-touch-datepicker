@@ -1,11 +1,11 @@
 <script>
   import DateSwitcher from './DateSwitcher.svelte';
 
-  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
-  const YEARS = new Array(201).fill(1900).map((v, i) => v + i);
-  const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  let m = 1;
+  const HOURS = new Array(12).fill(1).map((v, i) => v + i);
+  const MINUTES = new Array(59).fill(1).map((v, i) => v + i);
+  const MERIDIEM = ['AM', 'PM'];
 
-  $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((v, i) => v + i)
 
   export let date = new Date();
   export let visible = false;
@@ -20,17 +20,21 @@
     let {type, changedData} = event.detail;
     let newDate = new Date();
 
-    if (type === 'day') {
-      newDate = new Date(date.getFullYear(), date.getMonth(), changedData + 1)
-    } else if (type === 'month') {
-      let maxDayInSelectedMonth = new Date(date.getFullYear(), changedData + 1, 0).getDate()
-      let day = Math.min(date.getDate(), maxDayInSelectedMonth)
-      newDate = new Date(date.getFullYear(), changedData, day)
-    } else if (type === 'year') {
-      let maxDayInSelectedMonth = new Date(1900 + changedData, date.getMonth() + 1, 0).getDate()
-      let day = Math.min(date.getDate(), maxDayInSelectedMonth)
-      newDate = new Date(1900 + changedData, date.getMonth(), day)
+    if (type === 'hours'){
 
+      newDate.setHours(changedData + 13);
+      newDate.setMinutes(date.getMinutes())
+
+    } else if (type === 'minutes'){
+
+      newDate.setHours(date.getHours())
+      newDate.setMinutes(changedData + 1)
+
+    } else if (type === 'meridiem'){
+
+      newDate.setHours(date.getHours())
+      newDate.setMinutes(date.getMinutes())
+      m = changedData
     }
 
     date = newDate;
@@ -96,14 +100,12 @@
   <div class="touch-date-popup" >
     <div>
       <div class="touch-date-wrapper">
-          <div class='touch-date'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
-          <p>{ WEEKDAY[date.getDay()] }</p>
+          <div class='touch-date'>{ date.getHours() - 12 }:{ date.getMinutes() } { MERIDIEM[m] }</div>
           <div class='touch-date-picker'>
-            <DateSwitcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
-            <DateSwitcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
-            <DateSwitcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
+            <DateSwitcher type='hours' data={HOURS} selected={date.getHours() - 12 } on:dateChange={dateChanged} }/>
+            <DateSwitcher type='minutes' data={MINUTES} selected={date.getMinutes() } on:dateChange={dateChanged}/>
+            <DateSwitcher type='meridiem' data={MERIDIEM} selected={m+1} on:dateChange={dateChanged}/>
           </div>
-
         <div class='touch-date-reset'>
           <button on:click={resetDate}>Reset</button>
           <button on:click={() => {visible = !visible}}>Ok</button>
