@@ -8,7 +8,7 @@
 
 
   export let time = new Date();
-  export let _time;
+  export let _time, selectedHour;
   export let visible = false;
 
   let resetDate = (event) => {
@@ -18,6 +18,7 @@
 
   $: {
     _time = time.toLocaleTimeString('en-US', {timeStyle: 'short'});
+    selectedHour = +time.toLocaleTimeString('en-us', {hour12:true, hour:'numeric'}).split(' ')[0];
   }
 
   let dateChanged = (event) => {
@@ -38,11 +39,6 @@
     } else if (type === 'meridiem'){
 
       let fr = ~~changedData;
-
-
-
-      console.log(fr)
-
       if(fr){
         newTime.setHours(time.getHours() + 12 )
 
@@ -51,7 +47,6 @@
 
       }
       newTime.setMinutes(time.getMinutes())
-      // console.log(changedData)
       m = changedData
     }
 
@@ -120,7 +115,7 @@
       <div class="touch-date-wrapper">
           <div class='touch-date'>{_time}</div>
           <div class='touch-date-picker'>
-            <Switcher type='hours' data={HOURS} selected={time.getHours() - 12 } on:dateChange={dateChanged} }/>
+            <Switcher type='hours' data={HOURS} selected={selectedHour} on:dateChange={dateChanged} }/>
             <Switcher type='minutes' data={MINUTES} selected={time.getMinutes() } on:dateChange={dateChanged}/>
             <Switcher type='meridiem' data={MERIDIEM} selected={m+1} on:dateChange={dateChanged}/>
           </div>
