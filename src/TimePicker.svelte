@@ -38,15 +38,13 @@
 
     } else if (type === 'meridiem'){
 
-      let fr = ~~changedData;
-      if(fr){
+      if(~~changedData){
         newTime.setHours(time.getHours() + 12 )
-
       }else{
         newTime.setHours(time.getHours() - 12 )
-
       }
       newTime.setMinutes(time.getMinutes())
+      console.log(changedData)
       m = changedData
     }
 
@@ -117,7 +115,7 @@
           <div class='touch-date-picker'>
             <Switcher type='hours' data={HOURS} selected={selectedHour} on:dateChange={dateChanged} }/>
             <Switcher type='minutes' data={MINUTES} selected={time.getMinutes() } on:dateChange={dateChanged}/>
-            <Switcher type='meridiem' data={MERIDIEM} selected={m+1} on:dateChange={dateChanged}/>
+            <Switcher type='meridiem' data={MERIDIEM} selected={m} on:dateChange={dateChanged}/>
           </div>
         <div class='touch-date-reset'>
           <button on:click={resetDate}>Reset</button>
