@@ -1,5 +1,5 @@
 <script>
-  import DateSwitcher from './DateSwitcher.svelte';
+  import Switcher from './Switcher.svelte';
 
   let m = 1;
   const HOURS = new Array(12).fill(1).map((v, i) => v + i);
@@ -102,9 +102,9 @@
       <div class="touch-date-wrapper">
           <div class='touch-date'>{ date.getHours() - 12 }:{ date.getMinutes() } { MERIDIEM[m] }</div>
           <div class='touch-date-picker'>
-            <DateSwitcher type='hours' data={HOURS} selected={date.getHours() - 12 } on:dateChange={dateChanged} }/>
-            <DateSwitcher type='minutes' data={MINUTES} selected={date.getMinutes() } on:dateChange={dateChanged}/>
-            <DateSwitcher type='meridiem' data={MERIDIEM} selected={m+1} on:dateChange={dateChanged}/>
+            <Switcher type='hours' data={HOURS} selected={date.getHours() - 12 } on:dateChange={dateChanged} }/>
+            <Switcher type='minutes' data={MINUTES} selected={date.getMinutes() } on:dateChange={dateChanged}/>
+            <Switcher type='meridiem' data={MERIDIEM} selected={m+1} on:dateChange={dateChanged}/>
           </div>
         <div class='touch-date-reset'>
           <button on:click={resetDate}>Reset</button>

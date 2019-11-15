@@ -1,5 +1,5 @@
 <script>
-  import DateSwitcher from './DateSwitcher.svelte';
+  import Switcher from './Switcher.svelte';
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
   const YEARS = new Array(201).fill(1900).map((v, i) => v + i);
@@ -106,9 +106,9 @@
         <div class='date-line'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
         <p class='day-line'>{ WEEKDAY[date.getDay()] }</p>
         <div class='touch-date-picker'>
-          <DateSwitcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
-          <DateSwitcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
-          <DateSwitcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
+          <Switcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged} }/>
+          <Switcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
+          <Switcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
         </div>
         <div class='touch-date-reset'>
           <button on:click={resetDate}>Reset</button>
