@@ -37,8 +37,21 @@
 
     } else if (type === 'meridiem'){
 
-      newTime.setHours(time.getHours())
+      let fr = ~~changedData;
+
+
+
+      console.log(fr)
+
+      if(fr){
+        newTime.setHours(time.getHours() + 12 )
+
+      }else{
+        newTime.setHours(time.getHours() - 12 )
+
+      }
       newTime.setMinutes(time.getMinutes())
+      // console.log(changedData)
       m = changedData
     }
 
@@ -105,7 +118,7 @@
   <div class="touch-date-popup" >
     <div>
       <div class="touch-date-wrapper">
-          <div class='touch-date'>{ time.getHours() - 12 }:{ time.getMinutes() } { MERIDIEM[m] }</div>
+          <div class='touch-date'>{_time}</div>
           <div class='touch-date-picker'>
             <Switcher type='hours' data={HOURS} selected={time.getHours() - 12 } on:dateChange={dateChanged} }/>
             <Switcher type='minutes' data={MINUTES} selected={time.getMinutes() } on:dateChange={dateChanged}/>
