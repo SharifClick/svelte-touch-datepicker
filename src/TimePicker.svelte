@@ -7,37 +7,42 @@
   const MERIDIEM = ['AM', 'PM'];
 
 
-  export let date = new Date();
+  export let time = new Date();
+  export let _time;
   export let visible = false;
 
   let resetDate = (event) => {
     event.stopPropagation()
-    date = new Date();
+    time = new Date();
+  }
+
+  $: {
+    _time = time.toLocaleTimeString('en-US', {timeStyle: 'short'});
   }
 
   let dateChanged = (event) => {
 
     let {type, changedData} = event.detail;
-    let newDate = new Date();
+    let newTime = new Date();
 
     if (type === 'hours'){
 
-      newDate.setHours(changedData + 13);
-      newDate.setMinutes(date.getMinutes())
+      newTime.setHours(changedData + 13);
+      newTime.setMinutes(time.getMinutes())
 
     } else if (type === 'minutes'){
 
-      newDate.setHours(date.getHours())
-      newDate.setMinutes(changedData + 1)
+      newTime.setHours(time.getHours())
+      newTime.setMinutes(changedData + 1)
 
     } else if (type === 'meridiem'){
 
-      newDate.setHours(date.getHours())
-      newDate.setMinutes(date.getMinutes())
+      newTime.setHours(time.getHours())
+      newTime.setMinutes(time.getMinutes())
       m = changedData
     }
 
-    date = newDate;
+    time = newTime;
   }
 </script>
 
@@ -95,15 +100,15 @@
 
 </style>
 
-
+<input type="text" readonly value={_time} on:focus={() => {visible = !visible}}>
 {#if visible}
   <div class="touch-date-popup" >
     <div>
       <div class="touch-date-wrapper">
-          <div class='touch-date'>{ date.getHours() - 12 }:{ date.getMinutes() } { MERIDIEM[m] }</div>
+          <div class='touch-date'>{ time.getHours() - 12 }:{ time.getMinutes() } { MERIDIEM[m] }</div>
           <div class='touch-date-picker'>
-            <Switcher type='hours' data={HOURS} selected={date.getHours() - 12 } on:dateChange={dateChanged} }/>
-            <Switcher type='minutes' data={MINUTES} selected={date.getMinutes() } on:dateChange={dateChanged}/>
+            <Switcher type='hours' data={HOURS} selected={time.getHours() - 12 } on:dateChange={dateChanged} }/>
+            <Switcher type='minutes' data={MINUTES} selected={time.getMinutes() } on:dateChange={dateChanged}/>
             <Switcher type='meridiem' data={MERIDIEM} selected={m+1} on:dateChange={dateChanged}/>
           </div>
         <div class='touch-date-reset'>
@@ -113,5 +118,7 @@
       </div>
     </div>
   </div>
+
+
 {/if}
 
