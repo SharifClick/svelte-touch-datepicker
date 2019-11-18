@@ -27,8 +27,8 @@
     let newTime = new Date();
 
     if (type === 'hours'){
-
-      newTime.setHours(changedData + 1);
+      let thresholdHour = selectedMeridiem === 2 ? 13 : 1;
+      newTime.setHours(changedData + thresholdHour);
       newTime.setMinutes(time.getMinutes())
 
     } else if (type === 'minutes'){

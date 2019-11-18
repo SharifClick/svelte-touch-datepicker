@@ -1079,21 +1079,21 @@ var app = (function () {
     			button1 = element("button");
     			button1.textContent = "Ok";
     			attr_dev(div0, "class", "touch-date svelte-1j6rpje");
-    			add_location(div0, file$2, 111, 10, 2472);
+    			add_location(div0, file$2, 111, 10, 2542);
     			attr_dev(div1, "class", "touch-date-picker svelte-1j6rpje");
-    			add_location(div1, file$2, 112, 10, 2521);
+    			add_location(div1, file$2, 112, 10, 2591);
     			attr_dev(button0, "class", "svelte-1j6rpje");
-    			add_location(button0, file$2, 118, 10, 2953);
+    			add_location(button0, file$2, 118, 10, 3023);
     			attr_dev(button1, "class", "svelte-1j6rpje");
-    			add_location(button1, file$2, 119, 10, 3008);
+    			add_location(button1, file$2, 119, 10, 3078);
     			attr_dev(div2, "class", "touch-date-reset svelte-1j6rpje");
-    			add_location(div2, file$2, 117, 8, 2911);
+    			add_location(div2, file$2, 117, 8, 2981);
     			attr_dev(div3, "class", "touch-date-wrapper svelte-1j6rpje");
-    			add_location(div3, file$2, 110, 6, 2428);
+    			add_location(div3, file$2, 110, 6, 2498);
     			attr_dev(div4, "class", "svelte-1j6rpje");
-    			add_location(div4, file$2, 109, 4, 2415);
+    			add_location(div4, file$2, 109, 4, 2485);
     			attr_dev(div5, "class", "touch-date-popup svelte-1j6rpje");
-    			add_location(div5, file$2, 108, 2, 2378);
+    			add_location(div5, file$2, 108, 2, 2448);
 
     			dispose = [
     				listen_dev(button0, "click", ctx.resetDate),
@@ -1190,7 +1190,7 @@ var app = (function () {
     			attr_dev(input, "type", "text");
     			input.readOnly = true;
     			input.value = ctx._time;
-    			add_location(input, file$2, 106, 0, 2279);
+    			add_location(input, file$2, 106, 0, 2349);
     			dispose = listen_dev(input, "focus", ctx.focus_handler);
     		},
 
@@ -1279,8 +1279,8 @@ var app = (function () {
         let newTime = new Date();
 
         if (type === 'hours'){
-
-          newTime.setHours(changedData + 1);
+          let thresholdHour = selectedMeridiem === 2 ? 13 : 1;
+          newTime.setHours(changedData + thresholdHour);
           newTime.setMinutes(time.getMinutes());
 
         } else if (type === 'minutes'){
