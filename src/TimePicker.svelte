@@ -1,14 +1,13 @@
 <script>
   import Switcher from './Switcher.svelte';
 
-  let m = 1;
   const HOURS = new Array(12).fill(1).map((v, i) => v + i);
   const MINUTES = new Array(59).fill(1).map((v, i) => v + i);
   const MERIDIEM = ['AM', 'PM'];
 
 
   export let time = new Date();
-  export let _time, selectedHour;
+  export let _time, selectedHour, selectedMeridiem;
   export let visible = false;
 
   let resetDate = (event) => {
@@ -19,6 +18,7 @@
   $: {
     _time = time.toLocaleTimeString('en-US', {timeStyle: 'short'});
     selectedHour = +time.toLocaleTimeString('en-us', {hour12:true, hour:'numeric'}).split(' ')[0];
+    selectedMeridiem = time.getHours() < 12 ? 1 : 2;
   }
 
   let dateChanged = (event) => {
@@ -44,8 +44,6 @@
         newTime.setHours(time.getHours() - 12 )
       }
       newTime.setMinutes(time.getMinutes())
-      console.log(changedData)
-      m = changedData
     }
 
     time = newTime;
@@ -115,7 +113,7 @@
           <div class='touch-date-picker'>
             <Switcher type='hours' data={HOURS} selected={selectedHour} on:dateChange={dateChanged} }/>
             <Switcher type='minutes' data={MINUTES} selected={time.getMinutes() } on:dateChange={dateChanged}/>
-            <Switcher type='meridiem' data={MERIDIEM} selected={m} on:dateChange={dateChanged}/>
+            <Switcher type='meridiem' data={MERIDIEM} selected={selectedMeridiem} on:dateChange={dateChanged}/>
           </div>
         <div class='touch-date-reset'>
           <button on:click={resetDate}>Reset</button>
