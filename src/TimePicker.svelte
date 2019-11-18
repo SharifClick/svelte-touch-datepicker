@@ -28,7 +28,7 @@
 
     if (type === 'hours'){
 
-      newTime.setHours(changedData + 13);
+      newTime.setHours(changedData + 1);
       newTime.setMinutes(time.getMinutes())
 
     } else if (type === 'minutes'){
