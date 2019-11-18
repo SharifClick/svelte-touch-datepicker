@@ -1022,7 +1022,7 @@ var app = (function () {
 
     const file$2 = "src\\TimePicker.svelte";
 
-    // (108:0) {#if visible}
+    // (104:0) {#if visible}
     function create_if_block$1(ctx) {
     	var div5, div4, div3, div0, t0, t1, div1, t2, t3, t4, div2, button0, t6, button1, current, dispose;
 
@@ -1079,21 +1079,21 @@ var app = (function () {
     			button1 = element("button");
     			button1.textContent = "Ok";
     			attr_dev(div0, "class", "touch-date svelte-1j6rpje");
-    			add_location(div0, file$2, 111, 10, 2542);
+    			add_location(div0, file$2, 107, 10, 2504);
     			attr_dev(div1, "class", "touch-date-picker svelte-1j6rpje");
-    			add_location(div1, file$2, 112, 10, 2591);
+    			add_location(div1, file$2, 108, 10, 2553);
     			attr_dev(button0, "class", "svelte-1j6rpje");
-    			add_location(button0, file$2, 118, 10, 3023);
+    			add_location(button0, file$2, 114, 10, 2985);
     			attr_dev(button1, "class", "svelte-1j6rpje");
-    			add_location(button1, file$2, 119, 10, 3078);
+    			add_location(button1, file$2, 115, 10, 3040);
     			attr_dev(div2, "class", "touch-date-reset svelte-1j6rpje");
-    			add_location(div2, file$2, 117, 8, 2981);
+    			add_location(div2, file$2, 113, 8, 2943);
     			attr_dev(div3, "class", "touch-date-wrapper svelte-1j6rpje");
-    			add_location(div3, file$2, 110, 6, 2498);
+    			add_location(div3, file$2, 106, 6, 2460);
     			attr_dev(div4, "class", "svelte-1j6rpje");
-    			add_location(div4, file$2, 109, 4, 2485);
+    			add_location(div4, file$2, 105, 4, 2447);
     			attr_dev(div5, "class", "touch-date-popup svelte-1j6rpje");
-    			add_location(div5, file$2, 108, 2, 2448);
+    			add_location(div5, file$2, 104, 2, 2410);
 
     			dispose = [
     				listen_dev(button0, "click", ctx.resetDate),
@@ -1172,7 +1172,7 @@ var app = (function () {
     			run_all(dispose);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$1.name, type: "if", source: "(108:0) {#if visible}", ctx });
+    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$1.name, type: "if", source: "(104:0) {#if visible}", ctx });
     	return block;
     }
 
@@ -1190,7 +1190,7 @@ var app = (function () {
     			attr_dev(input, "type", "text");
     			input.readOnly = true;
     			input.value = ctx._time;
-    			add_location(input, file$2, 106, 0, 2349);
+    			add_location(input, file$2, 102, 0, 2311);
     			dispose = listen_dev(input, "focus", ctx.focus_handler);
     		},
 
@@ -1289,12 +1289,8 @@ var app = (function () {
           newTime.setMinutes(changedData + 1);
 
         } else if (type === 'meridiem'){
-
-          if(~~changedData){
-            newTime.setHours(time.getHours() + 12 );
-          }else{
-            newTime.setHours(time.getHours() - 12 );
-          }
+          let thresholdHour = ~~changedData ? 12 : ~11;
+          newTime.setHours(time.getHours() + thresholdHour );
           newTime.setMinutes(time.getMinutes());
         }
 

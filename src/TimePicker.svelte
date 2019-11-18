@@ -37,12 +37,8 @@
       newTime.setMinutes(changedData + 1)
 
     } else if (type === 'meridiem'){
-
-      if(~~changedData){
-        newTime.setHours(time.getHours() + 12 )
-      }else{
-        newTime.setHours(time.getHours() - 12 )
-      }
+      let thresholdHour = ~~changedData ? 12 : ~11;
+      newTime.setHours(time.getHours() + thresholdHour )
       newTime.setMinutes(time.getMinutes())
     }
 
