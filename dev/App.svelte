@@ -37,18 +37,6 @@
     width: 100%;
   }
 
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-  }
-
   .center {
     display: flex;
     justify-content: center;
