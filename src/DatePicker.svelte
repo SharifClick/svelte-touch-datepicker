@@ -5,7 +5,11 @@
   const YEARS = new Array(201).fill(1900).map((v, i) => v + i);
   const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-  $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((v, i) => v + i)
+  let _date;
+  $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((v, i) => v + i);
+  $:  _date = date.toLocaleDateString("en-US");
+ 
+
 
   export let date = new Date();
   export let visible = false;
@@ -98,7 +102,7 @@
   
 </style>
 
-
+<input type="text" readonly value={_date} on:focus={() => {visible = !visible}}>
 {#if visible}
   <div class="touch-date-popup" >
     <div>
