@@ -59,7 +59,7 @@ var app = (function () {
     function attr(node, attribute, value) {
         if (value == null)
             node.removeAttribute(attribute);
-        else
+        else if (node.getAttribute(attribute) !== value)
             node.setAttribute(attribute, value);
     }
     function children(element) {
@@ -87,7 +87,7 @@ var app = (function () {
         get_current_component().$$.after_update.push(fn);
     }
     function createEventDispatcher() {
-        const component = current_component;
+        const component = get_current_component();
         return (type, detail) => {
             const callbacks = component.$$.callbacks[type];
             if (callbacks) {
@@ -150,11 +150,12 @@ var app = (function () {
         update_scheduled = false;
     }
     function update($$) {
-        if ($$.fragment) {
-            $$.update($$.dirty);
+        if ($$.fragment !== null) {
+            $$.update();
             run_all($$.before_update);
-            $$.fragment.p($$.dirty, $$.ctx);
-            $$.dirty = null;
+            const dirty = $$.dirty;
+            $$.dirty = [-1];
+            $$.fragment && $$.fragment.p($$.ctx, dirty);
             $$.after_update.forEach(add_render_callback);
         }
     }
@@ -197,14 +198,18 @@ var app = (function () {
     }
 
     function bind(component, name, callback) {
-        if (component.$$.props.indexOf(name) === -1)
-            return;
-        component.$$.bound[name] = callback;
-        callback(component.$$.ctx[name]);
+        const index = component.$$.props[name];
+        if (index !== undefined) {
+            component.$$.bound[index] = callback;
+            callback(component.$$.ctx[index]);
+        }
+    }
+    function create_component(block) {
+        block && block.c();
     }
     function mount_component(component, target, anchor) {
         const { fragment, on_mount, on_destroy, after_update } = component.$$;
-        fragment.m(target, anchor);
+        fragment && fragment.m(target, anchor);
         // onMount happens before the initial afterUpdate
         add_render_callback(() => {
             const new_on_destroy = on_mount.map(run).filter(is_function);
@@ -221,32 +226,33 @@ var app = (function () {
         after_update.forEach(add_render_callback);
     }
     function destroy_component(component, detaching) {
-        if (component.$$.fragment) {
-            run_all(component.$$.on_destroy);
-            component.$$.fragment.d(detaching);
+        const $$ = component.$$;
+        if ($$.fragment !== null) {
+            run_all($$.on_destroy);
+            $$.fragment && $$.fragment.d(detaching);
             // TODO null out other refs, including component.$$ (but need to
             // preserve final state?)
-            component.$$.on_destroy = component.$$.fragment = null;
-            component.$$.ctx = {};
+            $$.on_destroy = $$.fragment = null;
+            $$.ctx = [];
         }
     }
-    function make_dirty(component, key) {
-        if (!component.$$.dirty) {
+    function make_dirty(component, i) {
+        if (component.$$.dirty[0] === -1) {
             dirty_components.push(component);
             schedule_update();
-            component.$$.dirty = blank_object();
+            component.$$.dirty.fill(0);
         }
-        component.$$.dirty[key] = true;
+        component.$$.dirty[(i / 31) | 0] |= (1 << (i % 31));
     }
-    function init(component, options, instance, create_fragment, not_equal, prop_names) {
+    function init(component, options, instance, create_fragment, not_equal, props, dirty = [-1]) {
         const parent_component = current_component;
         set_current_component(component);
-        const props = options.props || {};
+        const prop_values = options.props || {};
         const $$ = component.$$ = {
             fragment: null,
             ctx: null,
             // state
-            props: prop_names,
+            props,
             update: noop,
             not_equal,
             bound: blank_object(),
@@ -258,32 +264,33 @@ var app = (function () {
             context: new Map(parent_component ? parent_component.$$.context : []),
             // everything else
             callbacks: blank_object(),
-            dirty: null
+            dirty
         };
         let ready = false;
         $$.ctx = instance
-            ? instance(component, props, (key, ret, value = ret) => {
-                if ($$.ctx && not_equal($$.ctx[key], $$.ctx[key] = value)) {
-                    if ($$.bound[key])
-                        $$.bound[key](value);
+            ? instance(component, prop_values, (i, ret, value = ret) => {
+                if ($$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value)) {
+                    if ($$.bound[i])
+                        $$.bound[i](value);
                     if (ready)
-                        make_dirty(component, key);
+                        make_dirty(component, i);
                 }
                 return ret;
             })
-            : props;
+            : [];
         $$.update();
         ready = true;
         run_all($$.before_update);
-        $$.fragment = create_fragment($$.ctx);
+        // `false` as a special case of no DOM component
+        $$.fragment = create_fragment ? create_fragment($$.ctx) : false;
         if (options.target) {
             if (options.hydrate) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                $$.fragment.l(children(options.target));
+                $$.fragment && $$.fragment.l(children(options.target));
             }
             else {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                $$.fragment.c();
+                $$.fragment && $$.fragment.c();
             }
             if (options.intro)
                 transition_in(component.$$.fragment);
@@ -372,54 +379,56 @@ var app = (function () {
         }
     }
 
-    /* src\Switcher.svelte generated by Svelte v3.12.1 */
-
+    /* src\Switcher.svelte generated by Svelte v3.16.5 */
     const file = "src\\Switcher.svelte";
 
     function get_each_context(ctx, list, i) {
-    	const child_ctx = Object.create(ctx);
-    	child_ctx.item = list[i];
+    	const child_ctx = ctx.slice();
+    	child_ctx[15] = list[i];
     	return child_ctx;
     }
 
     // (140:3) {#each data as item }
     function create_each_block(ctx) {
-    	var li, t_value = ctx.item + "", t;
+    	let li;
+    	let t_value = /*item*/ ctx[15] + "";
+    	let t;
 
     	const block = {
     		c: function create() {
     			li = element("li");
     			t = text(t_value);
-    			attr_dev(li, "class", "svelte-9pbjus");
-    			add_location(li, file, 140, 5, 3337);
+    			attr_dev(li, "class", "svelte-ggmds2");
+    			add_location(li, file, 140, 5, 3377);
     		},
-
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
     			append_dev(li, t);
     		},
-
-    		p: function update(changed, ctx) {
-    			if ((changed.data) && t_value !== (t_value = ctx.item + "")) {
-    				set_data_dev(t, t_value);
-    			}
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*data*/ 1 && t_value !== (t_value = /*item*/ ctx[15] + "")) set_data_dev(t, t_value);
     		},
-
     		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach_dev(li);
-    			}
+    			if (detaching) detach_dev(li);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_each_block.name, type: "each", source: "(140:3) {#each data as item }", ctx });
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(140:3) {#each data as item }",
+    		ctx
+    	});
+
     	return block;
     }
 
     function create_fragment(ctx) {
-    	var div, ul, dispose;
-
-    	let each_value = ctx.data;
-
+    	let div;
+    	let ul;
+    	let dispose;
+    	let each_value = /*data*/ ctx[0];
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -434,21 +443,20 @@ var app = (function () {
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
-    			attr_dev(ul, "class", "touch-date-container svelte-9pbjus");
-    			add_location(ul, file, 138, 2, 3247);
-    			attr_dev(div, "class", "touch-date-wrapper svelte-9pbjus");
-    			add_location(div, file, 137, 0, 3156);
+
+    			attr_dev(ul, "class", "touch-date-container svelte-ggmds2");
+    			add_location(ul, file, 138, 2, 3287);
+    			attr_dev(div, "class", "touch-date-wrapper svelte-ggmds2");
+    			add_location(div, file, 137, 0, 3196);
 
     			dispose = [
-    				listen_dev(div, "mousedown", ctx.onMouseDown),
-    				listen_dev(div, "touchstart", ctx.onMouseDown)
+    				listen_dev(div, "mousedown", /*onMouseDown*/ ctx[2], false, false, false),
+    				listen_dev(div, "touchstart", /*onMouseDown*/ ctx[2], false, false, false)
     			];
     		},
-
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
-
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     			append_dev(div, ul);
@@ -457,19 +465,18 @@ var app = (function () {
     				each_blocks[i].m(ul, null);
     			}
 
-    			ctx.ul_binding(ul);
+    			/*ul_binding*/ ctx[14](ul);
     		},
-
-    		p: function update(changed, ctx) {
-    			if (changed.data) {
-    				each_value = ctx.data;
-
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*data*/ 1) {
+    				each_value = /*data*/ ctx[0];
     				let i;
+
     				for (i = 0; i < each_value.length; i += 1) {
     					const child_ctx = get_each_context(ctx, each_value, i);
 
     					if (each_blocks[i]) {
-    						each_blocks[i].p(changed, child_ctx);
+    						each_blocks[i].p(child_ctx, dirty);
     					} else {
     						each_blocks[i] = create_each_block(child_ctx);
     						each_blocks[i].c();
@@ -480,164 +487,188 @@ var app = (function () {
     				for (; i < each_blocks.length; i += 1) {
     					each_blocks[i].d(1);
     				}
+
     				each_blocks.length = each_value.length;
     			}
     		},
-
     		i: noop,
     		o: noop,
-
     		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach_dev(div);
-    			}
-
+    			if (detaching) detach_dev(div);
     			destroy_each(each_blocks, detaching);
-
-    			ctx.ul_binding(null);
+    			/*ul_binding*/ ctx[14](null);
     			run_all(dispose);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_fragment.name, type: "component", source: "", ctx });
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
     	return block;
     }
 
     function instance($$self, $$props, $$invalidate) {
     	const dispatch = createEventDispatcher();
+    	let { selected } = $$props;
+    	let { data = 0 } = $$props;
+    	let { type } = $$props;
+    	let position = selected ? -(selected - 1) * 50 : 0;
+    	let offset = 0;
+    	let dragging = false;
+    	let itemWrapper, previousY;
 
-      let { selected, data = 0, type } = $$props;
+    	onMount(() => {
+    		setPosition();
+    	});
 
-      let position = selected ? -(selected - 1) * 50 : 0;
-      let offset = 0;
-      let dragging = false;
-
-      let itemWrapper, previousY;
-
-
-      onMount(() => {
-       setPosition();
-      });
-
-      afterUpdate(() => {
+    	afterUpdate(() => {
     		let selectedPosition = -(selected - 1) * 50;
 
-        if (!dragging && position !== selectedPosition) {
-            position = selectedPosition;
-            setPosition();
-        }
-      });
+    		if (!dragging && position !== selectedPosition) {
+    			position = selectedPosition;
+    			setPosition();
+    		}
+    	});
 
+    	function onDateChange(type, changedData) {
+    		dispatch("dateChange", { type, changedData });
+    	}
 
-      function onDateChange(type, changedData) {
-    		dispatch('dateChange', {
-    			type, changedData
-    		});
-      }
-
-      function setPosition(){
-         let itemPosition = `
+    	function setPosition() {
+    		let itemPosition = `
       will-change: 'transform';
       transition: transform ${Math.abs(offset) / 100 + 0.1}s;
       transform: translateY(${position}px)
     `;
-        $$invalidate('itemWrapper', itemWrapper.style.cssText = itemPosition, itemWrapper);
-      }
 
-      let onMouseDown = (event) => {
-        previousY = event.touches ? event.touches[0].clientY : event.clientY;
-        dragging = true;
+    		$$invalidate(1, itemWrapper.style.cssText = itemPosition, itemWrapper);
+    	}
 
-        window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('mouseup', onMouseUp);
-        window.addEventListener('touchmove', onMouseMove);
-        window.addEventListener('touchend', onMouseUp);
-      };
+    	let onMouseDown = event => {
+    		previousY = event.touches ? event.touches[0].clientY : event.clientY;
+    		dragging = true;
+    		window.addEventListener("mousemove", onMouseMove);
+    		window.addEventListener("mouseup", onMouseUp);
+    		window.addEventListener("touchmove", onMouseMove);
+    		window.addEventListener("touchend", onMouseUp);
+    	};
 
-       let onMouseMove = (event) => {
-        let clientY = event.touches ? event.touches[0].clientY : event.clientY;
-        offset = clientY - previousY;
+    	let onMouseMove = event => {
+    		let clientY = event.touches ? event.touches[0].clientY : event.clientY;
+    		offset = clientY - previousY;
+    		let maxPosition = -data.length * 50;
+    		let _position = position + offset;
+    		position = Math.max(maxPosition, Math.min(50, _position));
+    		previousY = event.touches ? event.touches[0].clientY : event.clientY;
+    		setPosition();
+    	};
 
-        let maxPosition = -data.length * 50;
-        let _position = position + offset;
-        position = Math.max(maxPosition, Math.min(50, _position));
-        previousY = event.touches ? event.touches[0].clientY : event.clientY;
-        setPosition();
-      };
+    	let onMouseUp = () => {
+    		let maxPosition = -(data.length - 1) * 50;
+    		let rounderPosition = Math.round((position + offset * 5) / 50) * 50;
+    		let finalPosition = Math.max(maxPosition, Math.min(0, rounderPosition));
+    		dragging = false;
+    		position = finalPosition;
+    		window.removeEventListener("mousemove", onMouseMove);
+    		window.removeEventListener("mouseup", onMouseUp);
+    		window.removeEventListener("touchmove", onMouseMove);
+    		window.removeEventListener("touchend", onMouseUp);
+    		setPosition();
+    		onDateChange(type, -finalPosition / 50);
+    	};
 
-      let onMouseUp = () => {
-        let maxPosition = -(data.length - 1) * 50;
-        let rounderPosition = Math.round((position + offset * 5) / 50) * 50;
-        let finalPosition = Math.max(maxPosition, Math.min(0, rounderPosition));
+    	const writable_props = ["selected", "data", "type"];
 
-        dragging = false;
-        position = finalPosition;
-
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('mouseup', onMouseUp);
-        window.removeEventListener('touchmove', onMouseMove);
-        window.removeEventListener('touchend', onMouseUp);
-
-        setPosition();
-        onDateChange(type, -finalPosition / 50);
-      };
-
-    	const writable_props = ['selected', 'data', 'type'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<Switcher> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Switcher> was created with unknown prop '${key}'`);
     	});
 
     	function ul_binding($$value) {
-    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
-    			$$invalidate('itemWrapper', itemWrapper = $$value);
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			$$invalidate(1, itemWrapper = $$value);
     		});
     	}
 
     	$$self.$set = $$props => {
-    		if ('selected' in $$props) $$invalidate('selected', selected = $$props.selected);
-    		if ('data' in $$props) $$invalidate('data', data = $$props.data);
-    		if ('type' in $$props) $$invalidate('type', type = $$props.type);
+    		if ("selected" in $$props) $$invalidate(3, selected = $$props.selected);
+    		if ("data" in $$props) $$invalidate(0, data = $$props.data);
+    		if ("type" in $$props) $$invalidate(4, type = $$props.type);
     	};
 
     	$$self.$capture_state = () => {
-    		return { selected, data, type, position, offset, dragging, itemWrapper, previousY, onMouseDown, onMouseMove, onMouseUp };
+    		return {
+    			selected,
+    			data,
+    			type,
+    			position,
+    			offset,
+    			dragging,
+    			itemWrapper,
+    			previousY,
+    			onMouseDown,
+    			onMouseMove,
+    			onMouseUp
+    		};
     	};
 
     	$$self.$inject_state = $$props => {
-    		if ('selected' in $$props) $$invalidate('selected', selected = $$props.selected);
-    		if ('data' in $$props) $$invalidate('data', data = $$props.data);
-    		if ('type' in $$props) $$invalidate('type', type = $$props.type);
-    		if ('position' in $$props) position = $$props.position;
-    		if ('offset' in $$props) offset = $$props.offset;
-    		if ('dragging' in $$props) dragging = $$props.dragging;
-    		if ('itemWrapper' in $$props) $$invalidate('itemWrapper', itemWrapper = $$props.itemWrapper);
-    		if ('previousY' in $$props) previousY = $$props.previousY;
-    		if ('onMouseDown' in $$props) $$invalidate('onMouseDown', onMouseDown = $$props.onMouseDown);
-    		if ('onMouseMove' in $$props) onMouseMove = $$props.onMouseMove;
-    		if ('onMouseUp' in $$props) onMouseUp = $$props.onMouseUp;
+    		if ("selected" in $$props) $$invalidate(3, selected = $$props.selected);
+    		if ("data" in $$props) $$invalidate(0, data = $$props.data);
+    		if ("type" in $$props) $$invalidate(4, type = $$props.type);
+    		if ("position" in $$props) position = $$props.position;
+    		if ("offset" in $$props) offset = $$props.offset;
+    		if ("dragging" in $$props) dragging = $$props.dragging;
+    		if ("itemWrapper" in $$props) $$invalidate(1, itemWrapper = $$props.itemWrapper);
+    		if ("previousY" in $$props) previousY = $$props.previousY;
+    		if ("onMouseDown" in $$props) $$invalidate(2, onMouseDown = $$props.onMouseDown);
+    		if ("onMouseMove" in $$props) onMouseMove = $$props.onMouseMove;
+    		if ("onMouseUp" in $$props) onMouseUp = $$props.onMouseUp;
     	};
 
-    	return {
-    		selected,
+    	return [
     		data,
-    		type,
     		itemWrapper,
     		onMouseDown,
+    		selected,
+    		type,
+    		position,
+    		offset,
+    		dragging,
+    		previousY,
+    		dispatch,
+    		onDateChange,
+    		setPosition,
+    		onMouseMove,
+    		onMouseUp,
     		ul_binding
-    	};
+    	];
     }
 
     class Switcher extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, ["selected", "data", "type"]);
-    		dispatch_dev("SvelteRegisterComponent", { component: this, tagName: "Switcher", options, id: create_fragment.name });
+    		init(this, options, instance, create_fragment, safe_not_equal, { selected: 3, data: 0, type: 4 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Switcher",
+    			options,
+    			id: create_fragment.name
+    		});
 
     		const { ctx } = this.$$;
-    		const props = options.props || {};
-    		if (ctx.selected === undefined && !('selected' in props)) {
+    		const props = options.props || ({});
+
+    		if (/*selected*/ ctx[3] === undefined && !("selected" in props)) {
     			console.warn("<Switcher> was created without expected prop 'selected'");
     		}
-    		if (ctx.type === undefined && !('type' in props)) {
+
+    		if (/*type*/ ctx[4] === undefined && !("type" in props)) {
     			console.warn("<Switcher> was created without expected prop 'type'");
     		}
     	}
@@ -667,44 +698,72 @@ var app = (function () {
     	}
     }
 
-    /* src\DatePicker.svelte generated by Svelte v3.12.1 */
-
+    /* src\DatePicker.svelte generated by Svelte v3.16.5 */
     const file$1 = "src\\DatePicker.svelte";
 
-    // (102:0) {#if visible}
+    // (106:0) {#if visible}
     function create_if_block(ctx) {
-    	var div5, div4, div3, div0, t0_value = ctx.date.getDate() + "", t0, t1, t2_value = ctx.MONTHS[ctx.date.getMonth()] + "", t2, t3, t4_value = ctx.date.getFullYear() + "", t4, t5, p, t6_value = ctx.WEEKDAY[ctx.date.getDay()] + "", t6, t7, div1, t8, t9, t10, div2, button0, t12, button1, current, dispose;
+    	let div5;
+    	let div4;
+    	let div3;
+    	let div0;
+    	let t0_value = /*date*/ ctx[0].getDate() + "";
+    	let t0;
+    	let t1;
+    	let t2_value = /*MONTHS*/ ctx[4][/*date*/ ctx[0].getMonth()] + "";
+    	let t2;
+    	let t3;
+    	let t4_value = /*date*/ ctx[0].getFullYear() + "";
+    	let t4;
+    	let t5;
+    	let p;
+    	let t6_value = /*WEEKDAY*/ ctx[6][/*date*/ ctx[0].getDay()] + "";
+    	let t6;
+    	let t7;
+    	let div1;
+    	let t8;
+    	let t9;
+    	let t10;
+    	let div2;
+    	let button0;
+    	let t12;
+    	let button1;
+    	let current;
+    	let dispose;
 
-    	var switcher0 = new Switcher({
-    		props: {
-    		type: "day",
-    		data: ctx.DAYS,
-    		selected: ctx.date.getDate(),
-    		"}": true
-    	},
-    		$$inline: true
-    	});
-    	switcher0.$on("dateChange", ctx.dateChanged);
+    	const switcher0 = new Switcher({
+    			props: {
+    				type: "day",
+    				data: /*DAYS*/ ctx[3],
+    				selected: /*date*/ ctx[0].getDate(),
+    				"}": true
+    			},
+    			$$inline: true
+    		});
 
-    	var switcher1 = new Switcher({
-    		props: {
-    		type: "month",
-    		data: ctx.MONTHS,
-    		selected: ctx.date.getMonth() + 1
-    	},
-    		$$inline: true
-    	});
-    	switcher1.$on("dateChange", ctx.dateChanged);
+    	switcher0.$on("dateChange", /*dateChanged*/ ctx[8]);
 
-    	var switcher2 = new Switcher({
-    		props: {
-    		type: "year",
-    		data: ctx.YEARS,
-    		selected: ctx.date.getYear() + 1
-    	},
-    		$$inline: true
-    	});
-    	switcher2.$on("dateChange", ctx.dateChanged);
+    	const switcher1 = new Switcher({
+    			props: {
+    				type: "month",
+    				data: /*MONTHS*/ ctx[4],
+    				selected: /*date*/ ctx[0].getMonth() + 1
+    			},
+    			$$inline: true
+    		});
+
+    	switcher1.$on("dateChange", /*dateChanged*/ ctx[8]);
+
+    	const switcher2 = new Switcher({
+    			props: {
+    				type: "year",
+    				data: /*YEARS*/ ctx[5],
+    				selected: /*date*/ ctx[0].getYear() + 1
+    			},
+    			$$inline: true
+    		});
+
+    	switcher2.$on("dateChange", /*dateChanged*/ ctx[8]);
 
     	const block = {
     		c: function create() {
@@ -722,11 +781,11 @@ var app = (function () {
     			t6 = text(t6_value);
     			t7 = space();
     			div1 = element("div");
-    			switcher0.$$.fragment.c();
+    			create_component(switcher0.$$.fragment);
     			t8 = space();
-    			switcher1.$$.fragment.c();
+    			create_component(switcher1.$$.fragment);
     			t9 = space();
-    			switcher2.$$.fragment.c();
+    			create_component(switcher2.$$.fragment);
     			t10 = space();
     			div2 = element("div");
     			button0 = element("button");
@@ -734,31 +793,30 @@ var app = (function () {
     			t12 = space();
     			button1 = element("button");
     			button1.textContent = "Ok";
-    			attr_dev(div0, "class", "date-line svelte-l91fd0");
-    			add_location(div0, file$1, 105, 8, 2568);
-    			attr_dev(p, "class", "day-line svelte-l91fd0");
-    			add_location(p, file$1, 106, 8, 2676);
-    			attr_dev(div1, "class", "touch-date-picker svelte-l91fd0");
-    			add_location(div1, file$1, 107, 8, 2736);
-    			attr_dev(button0, "class", "svelte-l91fd0");
-    			add_location(button0, file$1, 113, 10, 3152);
-    			attr_dev(button1, "class", "svelte-l91fd0");
-    			add_location(button1, file$1, 114, 10, 3207);
-    			attr_dev(div2, "class", "touch-date-reset svelte-l91fd0");
-    			add_location(div2, file$1, 112, 8, 3110);
-    			attr_dev(div3, "class", "touch-date-wrapper svelte-l91fd0");
-    			add_location(div3, file$1, 104, 6, 2526);
-    			attr_dev(div4, "class", "svelte-l91fd0");
-    			add_location(div4, file$1, 103, 4, 2513);
-    			attr_dev(div5, "class", "touch-date-popup svelte-l91fd0");
-    			add_location(div5, file$1, 102, 2, 2476);
+    			attr_dev(div0, "class", "date-line svelte-1tmwc9");
+    			add_location(div0, file$1, 109, 8, 2926);
+    			attr_dev(p, "class", "day-line svelte-1tmwc9");
+    			add_location(p, file$1, 110, 8, 3034);
+    			attr_dev(div1, "class", "touch-date-picker svelte-1tmwc9");
+    			add_location(div1, file$1, 111, 8, 3094);
+    			attr_dev(button0, "class", "svelte-1tmwc9");
+    			add_location(button0, file$1, 117, 10, 3510);
+    			attr_dev(button1, "class", "svelte-1tmwc9");
+    			add_location(button1, file$1, 118, 10, 3565);
+    			attr_dev(div2, "class", "touch-date-reset svelte-1tmwc9");
+    			add_location(div2, file$1, 116, 8, 3468);
+    			attr_dev(div3, "class", "touch-date-wrapper svelte-1tmwc9");
+    			add_location(div3, file$1, 108, 6, 2884);
+    			attr_dev(div4, "class", "svelte-1tmwc9");
+    			add_location(div4, file$1, 107, 4, 2871);
+    			attr_dev(div5, "class", "touch-date-popup svelte-1tmwc9");
+    			add_location(div5, file$1, 106, 2, 2834);
 
     			dispose = [
-    				listen_dev(button0, "click", ctx.resetDate),
-    				listen_dev(button1, "click", ctx.click_handler)
+    				listen_dev(button0, "click", /*resetDate*/ ctx[7], false, false, false),
+    				listen_dev(button1, "click", /*click_handler*/ ctx[10], false, false, false)
     			];
     		},
-
     		m: function mount(target, anchor) {
     			insert_dev(target, div5, anchor);
     			append_dev(div5, div4);
@@ -786,99 +844,93 @@ var app = (function () {
     			append_dev(div2, button1);
     			current = true;
     		},
-
-    		p: function update(changed, ctx) {
-    			if ((!current || changed.date) && t0_value !== (t0_value = ctx.date.getDate() + "")) {
-    				set_data_dev(t0, t0_value);
-    			}
-
-    			if ((!current || changed.date) && t2_value !== (t2_value = ctx.MONTHS[ctx.date.getMonth()] + "")) {
-    				set_data_dev(t2, t2_value);
-    			}
-
-    			if ((!current || changed.date) && t4_value !== (t4_value = ctx.date.getFullYear() + "")) {
-    				set_data_dev(t4, t4_value);
-    			}
-
-    			if ((!current || changed.date) && t6_value !== (t6_value = ctx.WEEKDAY[ctx.date.getDay()] + "")) {
-    				set_data_dev(t6, t6_value);
-    			}
-
-    			var switcher0_changes = {};
-    			if (changed.DAYS) switcher0_changes.data = ctx.DAYS;
-    			if (changed.date) switcher0_changes.selected = ctx.date.getDate();
+    		p: function update(ctx, dirty) {
+    			if ((!current || dirty & /*date*/ 1) && t0_value !== (t0_value = /*date*/ ctx[0].getDate() + "")) set_data_dev(t0, t0_value);
+    			if ((!current || dirty & /*date*/ 1) && t2_value !== (t2_value = /*MONTHS*/ ctx[4][/*date*/ ctx[0].getMonth()] + "")) set_data_dev(t2, t2_value);
+    			if ((!current || dirty & /*date*/ 1) && t4_value !== (t4_value = /*date*/ ctx[0].getFullYear() + "")) set_data_dev(t4, t4_value);
+    			if ((!current || dirty & /*date*/ 1) && t6_value !== (t6_value = /*WEEKDAY*/ ctx[6][/*date*/ ctx[0].getDay()] + "")) set_data_dev(t6, t6_value);
+    			const switcher0_changes = {};
+    			if (dirty & /*DAYS*/ 8) switcher0_changes.data = /*DAYS*/ ctx[3];
+    			if (dirty & /*date*/ 1) switcher0_changes.selected = /*date*/ ctx[0].getDate();
     			switcher0.$set(switcher0_changes);
-
-    			var switcher1_changes = {};
-    			if (changed.date) switcher1_changes.selected = ctx.date.getMonth() + 1;
+    			const switcher1_changes = {};
+    			if (dirty & /*date*/ 1) switcher1_changes.selected = /*date*/ ctx[0].getMonth() + 1;
     			switcher1.$set(switcher1_changes);
-
-    			var switcher2_changes = {};
-    			if (changed.date) switcher2_changes.selected = ctx.date.getYear() + 1;
+    			const switcher2_changes = {};
+    			if (dirty & /*date*/ 1) switcher2_changes.selected = /*date*/ ctx[0].getYear() + 1;
     			switcher2.$set(switcher2_changes);
     		},
-
     		i: function intro(local) {
     			if (current) return;
     			transition_in(switcher0.$$.fragment, local);
-
     			transition_in(switcher1.$$.fragment, local);
-
     			transition_in(switcher2.$$.fragment, local);
-
     			current = true;
     		},
-
     		o: function outro(local) {
     			transition_out(switcher0.$$.fragment, local);
     			transition_out(switcher1.$$.fragment, local);
     			transition_out(switcher2.$$.fragment, local);
     			current = false;
     		},
-
     		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach_dev(div5);
-    			}
-
+    			if (detaching) detach_dev(div5);
     			destroy_component(switcher0);
-
     			destroy_component(switcher1);
-
     			destroy_component(switcher2);
-
     			run_all(dispose);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block.name, type: "if", source: "(102:0) {#if visible}", ctx });
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(106:0) {#if visible}",
+    		ctx
+    	});
+
     	return block;
     }
 
     function create_fragment$1(ctx) {
-    	var if_block_anchor, current;
-
-    	var if_block = (ctx.visible) && create_if_block(ctx);
+    	let input;
+    	let t;
+    	let if_block_anchor;
+    	let current;
+    	let dispose;
+    	let if_block = /*visible*/ ctx[1] && create_if_block(ctx);
 
     	const block = {
     		c: function create() {
+    			input = element("input");
+    			t = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
+    			attr_dev(input, "type", "text");
+    			input.readOnly = true;
+    			input.value = /*_date*/ ctx[2];
+    			add_location(input, file$1, 104, 0, 2735);
+    			dispose = listen_dev(input, "focus", /*focus_handler*/ ctx[9], false, false, false);
     		},
-
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
-
     		m: function mount(target, anchor) {
+    			insert_dev(target, input, anchor);
+    			insert_dev(target, t, anchor);
     			if (if_block) if_block.m(target, anchor);
     			insert_dev(target, if_block_anchor, anchor);
     			current = true;
     		},
+    		p: function update(ctx, [dirty]) {
+    			if (!current || dirty & /*_date*/ 4) {
+    				prop_dev(input, "value", /*_date*/ ctx[2]);
+    			}
 
-    		p: function update(changed, ctx) {
-    			if (ctx.visible) {
+    			if (/*visible*/ ctx[1]) {
     				if (if_block) {
-    					if_block.p(changed, ctx);
+    					if_block.p(ctx, dirty);
     					transition_in(if_block, 1);
     				} else {
     					if_block = create_if_block(ctx);
@@ -888,117 +940,166 @@ var app = (function () {
     				}
     			} else if (if_block) {
     				group_outros();
+
     				transition_out(if_block, 1, 1, () => {
     					if_block = null;
     				});
+
     				check_outros();
     			}
     		},
-
     		i: function intro(local) {
     			if (current) return;
     			transition_in(if_block);
     			current = true;
     		},
-
     		o: function outro(local) {
     			transition_out(if_block);
     			current = false;
     		},
-
     		d: function destroy(detaching) {
+    			if (detaching) detach_dev(input);
+    			if (detaching) detach_dev(t);
     			if (if_block) if_block.d(detaching);
-
-    			if (detaching) {
-    				detach_dev(if_block_anchor);
-    			}
+    			if (detaching) detach_dev(if_block_anchor);
+    			dispose();
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_fragment$1.name, type: "component", source: "", ctx });
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$1.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
     	return block;
     }
 
     function instance$1($$self, $$props, $$invalidate) {
-    	const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-      const YEARS = new Array(201).fill(1900).map((v, i) => v + i);
-      const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    	const MONTHS = [
+    		"Jan",
+    		"Feb",
+    		"Mar",
+    		"Apr",
+    		"May",
+    		"Jun",
+    		"July",
+    		"Aug",
+    		"Sept",
+    		"Oct",
+    		"Nov",
+    		"Dec"
+    	];
 
-      let { date = new Date(), visible = false } = $$props;
+    	const YEARS = new Array(201).fill(1900).map((v, i) => v + i);
+    	const WEEKDAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    	let _date;
+    	let { date = new Date() } = $$props;
+    	let { visible = false } = $$props;
 
-      let resetDate = (event) => {
-        event.stopPropagation();
-        $$invalidate('date', date = new Date());
-      };
+    	let resetDate = event => {
+    		event.stopPropagation();
+    		$$invalidate(0, date = new Date());
+    	};
 
-      let dateChanged = (event) => {
+    	let dateChanged = event => {
+    		let { type, changedData } = event.detail;
+    		let newDate = new Date();
 
-        let {type, changedData} = event.detail;
-        let newDate = new Date();
+    		if (type === "day") {
+    			newDate = new Date(date.getFullYear(), date.getMonth(), changedData + 1);
+    		} else if (type === "month") {
+    			let maxDayInSelectedMonth = new Date(date.getFullYear(), changedData + 1, 0).getDate();
+    			let day = Math.min(date.getDate(), maxDayInSelectedMonth);
+    			newDate = new Date(date.getFullYear(), changedData, day);
+    		} else if (type === "year") {
+    			let maxDayInSelectedMonth = new Date(1900 + changedData, date.getMonth() + 1, 0).getDate();
+    			let day = Math.min(date.getDate(), maxDayInSelectedMonth);
+    			newDate = new Date(1900 + changedData, date.getMonth(), day);
+    		}
 
-        if (type === 'day') {
-          newDate = new Date(date.getFullYear(), date.getMonth(), changedData + 1);
-        } else if (type === 'month') {
-          let maxDayInSelectedMonth = new Date(date.getFullYear(), changedData + 1, 0).getDate();
-          let day = Math.min(date.getDate(), maxDayInSelectedMonth);
-          newDate = new Date(date.getFullYear(), changedData, day);
-        } else if (type === 'year') {
-          let maxDayInSelectedMonth = new Date(1900 + changedData, date.getMonth() + 1, 0).getDate();
-          let day = Math.min(date.getDate(), maxDayInSelectedMonth);
-          newDate = new Date(1900 + changedData, date.getMonth(), day);
+    		$$invalidate(0, date = newDate);
+    	};
 
-        }
+    	const writable_props = ["date", "visible"];
 
-        $$invalidate('date', date = newDate);
-      };
-
-    	const writable_props = ['date', 'visible'];
     	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<DatePicker> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<DatePicker> was created with unknown prop '${key}'`);
     	});
 
-    	const click_handler = () => {$$invalidate('visible', visible = !visible);};
+    	const focus_handler = () => {
+    		$$invalidate(1, visible = !visible);
+    	};
+
+    	const click_handler = () => {
+    		$$invalidate(1, visible = !visible);
+    	};
 
     	$$self.$set = $$props => {
-    		if ('date' in $$props) $$invalidate('date', date = $$props.date);
-    		if ('visible' in $$props) $$invalidate('visible', visible = $$props.visible);
+    		if ("date" in $$props) $$invalidate(0, date = $$props.date);
+    		if ("visible" in $$props) $$invalidate(1, visible = $$props.visible);
     	};
 
     	$$self.$capture_state = () => {
-    		return { date, visible, resetDate, dateChanged, DAYS };
+    		return {
+    			_date,
+    			date,
+    			visible,
+    			resetDate,
+    			dateChanged,
+    			DAYS
+    		};
     	};
 
     	$$self.$inject_state = $$props => {
-    		if ('date' in $$props) $$invalidate('date', date = $$props.date);
-    		if ('visible' in $$props) $$invalidate('visible', visible = $$props.visible);
-    		if ('resetDate' in $$props) $$invalidate('resetDate', resetDate = $$props.resetDate);
-    		if ('dateChanged' in $$props) $$invalidate('dateChanged', dateChanged = $$props.dateChanged);
-    		if ('DAYS' in $$props) $$invalidate('DAYS', DAYS = $$props.DAYS);
+    		if ("_date" in $$props) $$invalidate(2, _date = $$props._date);
+    		if ("date" in $$props) $$invalidate(0, date = $$props.date);
+    		if ("visible" in $$props) $$invalidate(1, visible = $$props.visible);
+    		if ("resetDate" in $$props) $$invalidate(7, resetDate = $$props.resetDate);
+    		if ("dateChanged" in $$props) $$invalidate(8, dateChanged = $$props.dateChanged);
+    		if ("DAYS" in $$props) $$invalidate(3, DAYS = $$props.DAYS);
     	};
 
     	let DAYS;
 
-    	$$self.$$.update = ($$dirty = { date: 1 }) => {
-    		if ($$dirty.date) { $$invalidate('DAYS', DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((v, i) => v + i)); }
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*date*/ 1) {
+    			 $$invalidate(3, DAYS = new Array(new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()).fill(1).map((v, i) => v + i));
+    		}
+
+    		if ($$self.$$.dirty & /*date*/ 1) {
+    			 $$invalidate(2, _date = date.toLocaleDateString("en-US"));
+    		}
     	};
 
-    	return {
+    	return [
+    		date,
+    		visible,
+    		_date,
+    		DAYS,
     		MONTHS,
     		YEARS,
     		WEEKDAY,
-    		date,
-    		visible,
     		resetDate,
     		dateChanged,
-    		DAYS,
+    		focus_handler,
     		click_handler
-    	};
+    	];
     }
 
     class DatePicker extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["date", "visible"]);
-    		dispatch_dev("SvelteRegisterComponent", { component: this, tagName: "DatePicker", options, id: create_fragment$1.name });
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { date: 0, visible: 1 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "DatePicker",
+    			options,
+    			id: create_fragment$1.name
+    		});
     	}
 
     	get date() {
@@ -1018,656 +1119,137 @@ var app = (function () {
     	}
     }
 
-    /* src\TimePicker.svelte generated by Svelte v3.12.1 */
-
-    const file$2 = "src\\TimePicker.svelte";
-
-    // (104:0) {#if visible}
-    function create_if_block$1(ctx) {
-    	var div5, div4, div3, div0, t0, t1, div1, t2, t3, t4, div2, button0, t6, button1, current, dispose;
-
-    	var switcher0 = new Switcher({
-    		props: {
-    		type: "hours",
-    		data: ctx.HOURS,
-    		selected: ctx.selectedHour,
-    		"}": true
-    	},
-    		$$inline: true
-    	});
-    	switcher0.$on("dateChange", ctx.dateChanged);
-
-    	var switcher1 = new Switcher({
-    		props: {
-    		type: "minutes",
-    		data: ctx.MINUTES,
-    		selected: ctx.time.getMinutes()
-    	},
-    		$$inline: true
-    	});
-    	switcher1.$on("dateChange", ctx.dateChanged);
-
-    	var switcher2 = new Switcher({
-    		props: {
-    		type: "meridiem",
-    		data: ctx.MERIDIEM,
-    		selected: ctx.selectedMeridiem
-    	},
-    		$$inline: true
-    	});
-    	switcher2.$on("dateChange", ctx.dateChanged);
-
-    	const block = {
-    		c: function create() {
-    			div5 = element("div");
-    			div4 = element("div");
-    			div3 = element("div");
-    			div0 = element("div");
-    			t0 = text(ctx._time);
-    			t1 = space();
-    			div1 = element("div");
-    			switcher0.$$.fragment.c();
-    			t2 = space();
-    			switcher1.$$.fragment.c();
-    			t3 = space();
-    			switcher2.$$.fragment.c();
-    			t4 = space();
-    			div2 = element("div");
-    			button0 = element("button");
-    			button0.textContent = "Reset";
-    			t6 = space();
-    			button1 = element("button");
-    			button1.textContent = "Ok";
-    			attr_dev(div0, "class", "touch-date svelte-1j6rpje");
-    			add_location(div0, file$2, 107, 10, 2504);
-    			attr_dev(div1, "class", "touch-date-picker svelte-1j6rpje");
-    			add_location(div1, file$2, 108, 10, 2553);
-    			attr_dev(button0, "class", "svelte-1j6rpje");
-    			add_location(button0, file$2, 114, 10, 2985);
-    			attr_dev(button1, "class", "svelte-1j6rpje");
-    			add_location(button1, file$2, 115, 10, 3040);
-    			attr_dev(div2, "class", "touch-date-reset svelte-1j6rpje");
-    			add_location(div2, file$2, 113, 8, 2943);
-    			attr_dev(div3, "class", "touch-date-wrapper svelte-1j6rpje");
-    			add_location(div3, file$2, 106, 6, 2460);
-    			attr_dev(div4, "class", "svelte-1j6rpje");
-    			add_location(div4, file$2, 105, 4, 2447);
-    			attr_dev(div5, "class", "touch-date-popup svelte-1j6rpje");
-    			add_location(div5, file$2, 104, 2, 2410);
-
-    			dispose = [
-    				listen_dev(button0, "click", ctx.resetDate),
-    				listen_dev(button1, "click", ctx.click_handler)
-    			];
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div5, anchor);
-    			append_dev(div5, div4);
-    			append_dev(div4, div3);
-    			append_dev(div3, div0);
-    			append_dev(div0, t0);
-    			append_dev(div3, t1);
-    			append_dev(div3, div1);
-    			mount_component(switcher0, div1, null);
-    			append_dev(div1, t2);
-    			mount_component(switcher1, div1, null);
-    			append_dev(div1, t3);
-    			mount_component(switcher2, div1, null);
-    			append_dev(div3, t4);
-    			append_dev(div3, div2);
-    			append_dev(div2, button0);
-    			append_dev(div2, t6);
-    			append_dev(div2, button1);
-    			current = true;
-    		},
-
-    		p: function update(changed, ctx) {
-    			if (!current || changed._time) {
-    				set_data_dev(t0, ctx._time);
-    			}
-
-    			var switcher0_changes = {};
-    			if (changed.selectedHour) switcher0_changes.selected = ctx.selectedHour;
-    			switcher0.$set(switcher0_changes);
-
-    			var switcher1_changes = {};
-    			if (changed.time) switcher1_changes.selected = ctx.time.getMinutes();
-    			switcher1.$set(switcher1_changes);
-
-    			var switcher2_changes = {};
-    			if (changed.selectedMeridiem) switcher2_changes.selected = ctx.selectedMeridiem;
-    			switcher2.$set(switcher2_changes);
-    		},
-
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(switcher0.$$.fragment, local);
-
-    			transition_in(switcher1.$$.fragment, local);
-
-    			transition_in(switcher2.$$.fragment, local);
-
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			transition_out(switcher0.$$.fragment, local);
-    			transition_out(switcher1.$$.fragment, local);
-    			transition_out(switcher2.$$.fragment, local);
-    			current = false;
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach_dev(div5);
-    			}
-
-    			destroy_component(switcher0);
-
-    			destroy_component(switcher1);
-
-    			destroy_component(switcher2);
-
-    			run_all(dispose);
-    		}
-    	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_if_block$1.name, type: "if", source: "(104:0) {#if visible}", ctx });
-    	return block;
-    }
+    /* dev\App.svelte generated by Svelte v3.16.5 */
+    const file$2 = "dev\\App.svelte";
 
     function create_fragment$2(ctx) {
-    	var input, t, if_block_anchor, current, dispose;
+    	let div1;
+    	let div0;
+    	let p;
+    	let t0;
+    	let t1;
+    	let t2;
+    	let updating_date;
+    	let current;
 
-    	var if_block = (ctx.visible) && create_if_block$1(ctx);
+    	function datepicker_date_binding(value) {
+    		/*datepicker_date_binding*/ ctx[2].call(null, value);
+    	}
+
+    	let datepicker_props = {};
+
+    	if (/*date*/ ctx[0] !== void 0) {
+    		datepicker_props.date = /*date*/ ctx[0];
+    	}
+
+    	const datepicker = new DatePicker({ props: datepicker_props, $$inline: true });
+    	binding_callbacks.push(() => bind(datepicker, "date", datepicker_date_binding));
 
     	const block = {
     		c: function create() {
-    			input = element("input");
-    			t = space();
-    			if (if_block) if_block.c();
-    			if_block_anchor = empty();
-    			attr_dev(input, "type", "text");
-    			input.readOnly = true;
-    			input.value = ctx._time;
-    			add_location(input, file$2, 102, 0, 2311);
-    			dispose = listen_dev(input, "focus", ctx.focus_handler);
+    			div1 = element("div");
+    			div0 = element("div");
+    			p = element("p");
+    			t0 = text("Date: ");
+    			t1 = text(/*_date*/ ctx[1]);
+    			t2 = space();
+    			create_component(datepicker.$$.fragment);
+    			add_location(p, file$2, 38, 4, 663);
+    			attr_dev(div0, "class", "center svelte-tpplob");
+    			add_location(div0, file$2, 37, 2, 637);
+    			attr_dev(div1, "class", "container svelte-tpplob");
+    			add_location(div1, file$2, 36, 0, 609);
     		},
-
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
-
     		m: function mount(target, anchor) {
-    			insert_dev(target, input, anchor);
-    			insert_dev(target, t, anchor);
-    			if (if_block) if_block.m(target, anchor);
-    			insert_dev(target, if_block_anchor, anchor);
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, div0);
+    			append_dev(div0, p);
+    			append_dev(p, t0);
+    			append_dev(p, t1);
+    			append_dev(div0, t2);
+    			mount_component(datepicker, div0, null);
     			current = true;
     		},
+    		p: function update(ctx, [dirty]) {
+    			if (!current || dirty & /*_date*/ 2) set_data_dev(t1, /*_date*/ ctx[1]);
+    			const datepicker_changes = {};
 
-    		p: function update(changed, ctx) {
-    			if (!current || changed._time) {
-    				prop_dev(input, "value", ctx._time);
+    			if (!updating_date && dirty & /*date*/ 1) {
+    				updating_date = true;
+    				datepicker_changes.date = /*date*/ ctx[0];
+    				add_flush_callback(() => updating_date = false);
     			}
 
-    			if (ctx.visible) {
-    				if (if_block) {
-    					if_block.p(changed, ctx);
-    					transition_in(if_block, 1);
-    				} else {
-    					if_block = create_if_block$1(ctx);
-    					if_block.c();
-    					transition_in(if_block, 1);
-    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-    				}
-    			} else if (if_block) {
-    				group_outros();
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
-    				});
-    				check_outros();
-    			}
+    			datepicker.$set(datepicker_changes);
     		},
-
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(if_block);
+    			transition_in(datepicker.$$.fragment, local);
     			current = true;
     		},
-
     		o: function outro(local) {
-    			transition_out(if_block);
+    			transition_out(datepicker.$$.fragment, local);
     			current = false;
     		},
-
     		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach_dev(input);
-    				detach_dev(t);
-    			}
-
-    			if (if_block) if_block.d(detaching);
-
-    			if (detaching) {
-    				detach_dev(if_block_anchor);
-    			}
-
-    			dispose();
+    			if (detaching) detach_dev(div1);
+    			destroy_component(datepicker);
     		}
     	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_fragment$2.name, type: "component", source: "", ctx });
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$2.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
     	return block;
     }
 
     function instance$2($$self, $$props, $$invalidate) {
-    	const HOURS = new Array(12).fill(1).map((v, i) => v + i);
-      const MINUTES = new Array(59).fill(1).map((v, i) => v + i);
-      const MERIDIEM = ['AM', 'PM'];
-
-
-      let { time = new Date(), _time, selectedHour, selectedMeridiem, visible = false } = $$props;
-
-      let resetDate = (event) => {
-        event.stopPropagation();
-        $$invalidate('time', time = new Date());
-      };
-
-      let dateChanged = (event) => {
-
-        let {type, changedData} = event.detail;
-        let newTime = new Date();
-
-        if (type === 'hours'){
-          let thresholdHour = selectedMeridiem === 2 ? 13 : 1;
-          newTime.setHours(changedData + thresholdHour);
-          newTime.setMinutes(time.getMinutes());
-
-        } else if (type === 'minutes'){
-
-          newTime.setHours(time.getHours());
-          newTime.setMinutes(changedData + 1);
-
-        } else if (type === 'meridiem'){
-          let thresholdHour = ~~changedData ? 12 : ~11;
-          newTime.setHours(time.getHours() + thresholdHour );
-          newTime.setMinutes(time.getMinutes());
-        }
-
-        $$invalidate('time', time = newTime);
-      };
-
-    	const writable_props = ['time', '_time', 'selectedHour', 'selectedMeridiem', 'visible'];
-    	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<TimePicker> was created with unknown prop '${key}'`);
-    	});
-
-    	const focus_handler = () => {$$invalidate('visible', visible = !visible);};
-
-    	const click_handler = () => {$$invalidate('visible', visible = !visible);};
-
-    	$$self.$set = $$props => {
-    		if ('time' in $$props) $$invalidate('time', time = $$props.time);
-    		if ('_time' in $$props) $$invalidate('_time', _time = $$props._time);
-    		if ('selectedHour' in $$props) $$invalidate('selectedHour', selectedHour = $$props.selectedHour);
-    		if ('selectedMeridiem' in $$props) $$invalidate('selectedMeridiem', selectedMeridiem = $$props.selectedMeridiem);
-    		if ('visible' in $$props) $$invalidate('visible', visible = $$props.visible);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return { time, _time, selectedHour, selectedMeridiem, visible, resetDate, dateChanged };
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ('time' in $$props) $$invalidate('time', time = $$props.time);
-    		if ('_time' in $$props) $$invalidate('_time', _time = $$props._time);
-    		if ('selectedHour' in $$props) $$invalidate('selectedHour', selectedHour = $$props.selectedHour);
-    		if ('selectedMeridiem' in $$props) $$invalidate('selectedMeridiem', selectedMeridiem = $$props.selectedMeridiem);
-    		if ('visible' in $$props) $$invalidate('visible', visible = $$props.visible);
-    		if ('resetDate' in $$props) $$invalidate('resetDate', resetDate = $$props.resetDate);
-    		if ('dateChanged' in $$props) $$invalidate('dateChanged', dateChanged = $$props.dateChanged);
-    	};
-
-    	$$self.$$.update = ($$dirty = { time: 1 }) => {
-    		if ($$dirty.time) { {
-            $$invalidate('_time', _time = time.toLocaleTimeString('en-US', {timeStyle: 'short'}));
-            $$invalidate('selectedHour', selectedHour = +time.toLocaleTimeString('en-us', {hour12:true, hour:'numeric'}).split(' ')[0]);
-            $$invalidate('selectedMeridiem', selectedMeridiem = time.getHours() < 12 ? 1 : 2);
-          } }
-    	};
-
-    	return {
-    		HOURS,
-    		MINUTES,
-    		MERIDIEM,
-    		time,
-    		_time,
-    		selectedHour,
-    		selectedMeridiem,
-    		visible,
-    		resetDate,
-    		dateChanged,
-    		focus_handler,
-    		click_handler
-    	};
-    }
-
-    class TimePicker extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$2, create_fragment$2, safe_not_equal, ["time", "_time", "selectedHour", "selectedMeridiem", "visible"]);
-    		dispatch_dev("SvelteRegisterComponent", { component: this, tagName: "TimePicker", options, id: create_fragment$2.name });
-
-    		const { ctx } = this.$$;
-    		const props = options.props || {};
-    		if (ctx._time === undefined && !('_time' in props)) {
-    			console.warn("<TimePicker> was created without expected prop '_time'");
-    		}
-    		if (ctx.selectedHour === undefined && !('selectedHour' in props)) {
-    			console.warn("<TimePicker> was created without expected prop 'selectedHour'");
-    		}
-    		if (ctx.selectedMeridiem === undefined && !('selectedMeridiem' in props)) {
-    			console.warn("<TimePicker> was created without expected prop 'selectedMeridiem'");
-    		}
-    	}
-
-    	get time() {
-    		throw new Error("<TimePicker>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set time(value) {
-    		throw new Error("<TimePicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get _time() {
-    		throw new Error("<TimePicker>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set _time(value) {
-    		throw new Error("<TimePicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get selectedHour() {
-    		throw new Error("<TimePicker>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set selectedHour(value) {
-    		throw new Error("<TimePicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get selectedMeridiem() {
-    		throw new Error("<TimePicker>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set selectedMeridiem(value) {
-    		throw new Error("<TimePicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get visible() {
-    		throw new Error("<TimePicker>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set visible(value) {
-    		throw new Error("<TimePicker>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* dev\App.svelte generated by Svelte v3.12.1 */
-
-    const file$3 = "dev\\App.svelte";
-
-    function create_fragment$3(ctx) {
-    	var div1, div0, p0, t0, t1, input, t2, updating_date, updating_visible, t3, hr, t4, p1, t5, t6, updating_time, current, dispose;
-
-    	function datepicker_date_binding(value) {
-    		ctx.datepicker_date_binding.call(null, value);
-    		updating_date = true;
-    		add_flush_callback(() => updating_date = false);
-    	}
-
-    	function datepicker_visible_binding(value_1) {
-    		ctx.datepicker_visible_binding.call(null, value_1);
-    		updating_visible = true;
-    		add_flush_callback(() => updating_visible = false);
-    	}
-
-    	let datepicker_props = {};
-    	if (ctx.date !== void 0) {
-    		datepicker_props.date = ctx.date;
-    	}
-    	if (ctx.visible !== void 0) {
-    		datepicker_props.visible = ctx.visible;
-    	}
-    	var datepicker = new DatePicker({ props: datepicker_props, $$inline: true });
-
-    	binding_callbacks.push(() => bind(datepicker, 'date', datepicker_date_binding));
-    	binding_callbacks.push(() => bind(datepicker, 'visible', datepicker_visible_binding));
-
-    	function timepicker_time_binding(value_2) {
-    		ctx.timepicker_time_binding.call(null, value_2);
-    		updating_time = true;
-    		add_flush_callback(() => updating_time = false);
-    	}
-
-    	let timepicker_props = {};
-    	if (ctx.time !== void 0) {
-    		timepicker_props.time = ctx.time;
-    	}
-    	var timepicker = new TimePicker({ props: timepicker_props, $$inline: true });
-
-    	binding_callbacks.push(() => bind(timepicker, 'time', timepicker_time_binding));
-
-    	const block = {
-    		c: function create() {
-    			div1 = element("div");
-    			div0 = element("div");
-    			p0 = element("p");
-    			t0 = text(ctx._date);
-    			t1 = space();
-    			input = element("input");
-    			t2 = space();
-    			datepicker.$$.fragment.c();
-    			t3 = space();
-    			hr = element("hr");
-    			t4 = space();
-    			p1 = element("p");
-    			t5 = text(ctx.time);
-    			t6 = space();
-    			timepicker.$$.fragment.c();
-    			attr_dev(p0, "class", "svelte-17s18kr");
-    			add_location(p0, file$3, 62, 4, 1074);
-    			attr_dev(input, "type", "text");
-    			input.readOnly = true;
-    			input.value = ctx._date;
-    			attr_dev(input, "class", "svelte-17s18kr");
-    			add_location(input, file$3, 63, 4, 1112);
-    			attr_dev(hr, "class", "svelte-17s18kr");
-    			add_location(hr, file$3, 66, 4, 1222);
-    			attr_dev(p1, "class", "svelte-17s18kr");
-    			add_location(p1, file$3, 67, 4, 1232);
-    			attr_dev(div0, "class", "center svelte-17s18kr");
-    			add_location(div0, file$3, 61, 2, 1048);
-    			attr_dev(div1, "class", "container svelte-17s18kr");
-    			add_location(div1, file$3, 60, 0, 1020);
-
-    			dispose = [
-    				listen_dev(p0, "click", ctx.toggle),
-    				listen_dev(input, "focus", ctx.toggle),
-    				listen_dev(p1, "click", ctx.toggle)
-    			];
-    		},
-
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div1, anchor);
-    			append_dev(div1, div0);
-    			append_dev(div0, p0);
-    			append_dev(p0, t0);
-    			append_dev(div0, t1);
-    			append_dev(div0, input);
-    			append_dev(div0, t2);
-    			mount_component(datepicker, div0, null);
-    			append_dev(div0, t3);
-    			append_dev(div0, hr);
-    			append_dev(div0, t4);
-    			append_dev(div0, p1);
-    			append_dev(p1, t5);
-    			append_dev(div0, t6);
-    			mount_component(timepicker, div0, null);
-    			current = true;
-    		},
-
-    		p: function update(changed, ctx) {
-    			if (!current || changed._date) {
-    				set_data_dev(t0, ctx._date);
-    				prop_dev(input, "value", ctx._date);
-    			}
-
-    			var datepicker_changes = {};
-    			if (!updating_date && changed.date) {
-    				datepicker_changes.date = ctx.date;
-    			}
-    			if (!updating_visible && changed.visible) {
-    				datepicker_changes.visible = ctx.visible;
-    			}
-    			datepicker.$set(datepicker_changes);
-
-    			if (!current || changed.time) {
-    				set_data_dev(t5, ctx.time);
-    			}
-
-    			var timepicker_changes = {};
-    			if (!updating_time && changed.time) {
-    				timepicker_changes.time = ctx.time;
-    			}
-    			timepicker.$set(timepicker_changes);
-    		},
-
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(datepicker.$$.fragment, local);
-
-    			transition_in(timepicker.$$.fragment, local);
-
-    			current = true;
-    		},
-
-    		o: function outro(local) {
-    			transition_out(datepicker.$$.fragment, local);
-    			transition_out(timepicker.$$.fragment, local);
-    			current = false;
-    		},
-
-    		d: function destroy(detaching) {
-    			if (detaching) {
-    				detach_dev(div1);
-    			}
-
-    			destroy_component(datepicker);
-
-    			destroy_component(timepicker);
-
-    			run_all(dispose);
-    		}
-    	};
-    	dispatch_dev("SvelteRegisterBlock", { block, id: create_fragment$3.name, type: "component", source: "", ctx });
-    	return block;
-    }
-
-    function instance$3($$self, $$props, $$invalidate) {
-    	
-
-      let { mode = 'time' } = $$props;
-
-      let date = new Date();
-      let time = new Date();
-      let visible = false;
-      let visibleTime = false;
-      let inputDate;
-
-      afterUpdate(() => {
-    	  
-      });
-
-      function toggle(){
-        $$invalidate('visible', visible = !visible);
-      }
-
-    	const writable_props = ['mode'];
-    	Object.keys($$props).forEach(key => {
-    		if (!writable_props.includes(key) && !key.startsWith('$$')) console.warn(`<App> was created with unknown prop '${key}'`);
-    	});
+    	let date = new Date();
 
     	function datepicker_date_binding(value) {
     		date = value;
-    		$$invalidate('date', date);
+    		$$invalidate(0, date);
     	}
-
-    	function datepicker_visible_binding(value_1) {
-    		visible = value_1;
-    		$$invalidate('visible', visible);
-    	}
-
-    	function timepicker_time_binding(value_2) {
-    		time = value_2;
-    		$$invalidate('time', time);
-    	}
-
-    	$$self.$set = $$props => {
-    		if ('mode' in $$props) $$invalidate('mode', mode = $$props.mode);
-    	};
 
     	$$self.$capture_state = () => {
-    		return { mode, date, time, visible, visibleTime, inputDate, _date, _inputdate };
+    		return {};
     	};
 
     	$$self.$inject_state = $$props => {
-    		if ('mode' in $$props) $$invalidate('mode', mode = $$props.mode);
-    		if ('date' in $$props) $$invalidate('date', date = $$props.date);
-    		if ('time' in $$props) $$invalidate('time', time = $$props.time);
-    		if ('visible' in $$props) $$invalidate('visible', visible = $$props.visible);
-    		if ('visibleTime' in $$props) visibleTime = $$props.visibleTime;
-    		if ('inputDate' in $$props) $$invalidate('inputDate', inputDate = $$props.inputDate);
-    		if ('_date' in $$props) $$invalidate('_date', _date = $$props._date);
-    		if ('_inputdate' in $$props) _inputdate = $$props._inputdate;
+    		if ("date" in $$props) $$invalidate(0, date = $$props.date);
+    		if ("_date" in $$props) $$invalidate(1, _date = $$props._date);
     	};
 
-    	let _date, _inputdate;
+    	let _date;
 
-    	$$self.$$.update = ($$dirty = { date: 1, inputDate: 1 }) => {
-    		if ($$dirty.date) { $$invalidate('_date', _date = date.toLocaleDateString("en-US")); }
-    		if ($$dirty.inputDate) { _inputdate = new Date(inputDate); }
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*date*/ 1) {
+    			 $$invalidate(1, _date = date.toLocaleDateString("en-US"));
+    		}
     	};
 
-    	return {
-    		mode,
-    		date,
-    		time,
-    		visible,
-    		toggle,
-    		_date,
-    		datepicker_date_binding,
-    		datepicker_visible_binding,
-    		timepicker_time_binding
-    	};
+    	return [date, _date, datepicker_date_binding];
     }
 
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$3, create_fragment$3, safe_not_equal, ["mode"]);
-    		dispatch_dev("SvelteRegisterComponent", { component: this, tagName: "App", options, id: create_fragment$3.name });
-    	}
+    		init(this, options, instance$2, create_fragment$2, safe_not_equal, {});
 
-    	get mode() {
-    		throw new Error("<App>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set mode(value) {
-    		throw new Error("<App>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "App",
+    			options,
+    			id: create_fragment$2.name
+    		});
     	}
     }
 
