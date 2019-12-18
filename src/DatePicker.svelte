@@ -80,11 +80,11 @@
   width: 100px;
   height: 30px;
   border-radius: 15px;
-  border: var(--svtd-border, none);
+  border: var(--svtd-border, 1px solid grey);
   outline: none;
-  color: var(--svtd-button-color, white);
-  background-color: var(--svtd-button-bg-color, #2466fb);
-  box-shadow: var(--svtd-button-box-shadow, 0 1px 10px -2px #2466fb) ;
+  color: var(--svtd-button-color, black);
+  background-color: var(--svtd-button-bg-color, transparent);
+  box-shadow: var(--svtd-button-box-shadow, none) ;
   font-weight: 300;
 }
 .touch-date-reset button:nth-child(1):active {
