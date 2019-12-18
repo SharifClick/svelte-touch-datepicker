@@ -91,8 +91,8 @@
   position: relative;
   height: 50px;
   margin: 0 10px;
-  border-top: 1px solid #0522f3;
-  border-bottom: 1px solid #0522f3;
+  border-top: 1px solid var(--svtd-bar-color, #0522f3);
+  border-bottom: 1px solid var(--svtd-bar-color, #0522f3);
   border-radius: 0;
 }
 .touch-date-container {
