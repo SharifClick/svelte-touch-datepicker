@@ -53,19 +53,19 @@
   overscroll-behavior: none;
 }
 .touch-date-popup > div{
-  background: white;
-  color: #000000;
+  background: var(--svtd-popup-bg-color, white);
+  color: var(--svtd-popup-color, black);
   margin-top: 30vh;
   width: 85%;
   margin-left: 7%;
-  border-radius: 10px;
+  border-radius: var(--svtd-popup-radius, 10px);
 }
 .touch-date-wrapper{
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  font: 20px 'Roboto', sans-serif;
+  font-size: var(--svtd-font-size, 20px);
   padding: 1.5rem;
 }
 
