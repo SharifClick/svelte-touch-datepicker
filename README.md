@@ -56,21 +56,10 @@ npm i svelte-touch-datepicker
     --svtd-popup-color: black;
     --svtd-popup-radius: 10px;
     --svtd-font-size: 20px;
-    --svtd-button-color: white;
-    --svtd-button-bg-color: #2466fb;
-    --svtd-border: none;
-    --svtd-button-box-shadow: 0 1px 10px -2px #2466fb;
-    --svtd-bar-color: #0522f3;
-  }
-```
-
-# simple theme
-```css
-  :root{
-    --svtd-bar-color: #0522f3;
-    --svtd-button-color: white;
-    --svtd-button-bg-color: #2466fb;
-    --svtd-border: none;
-    --svtd-button-box-shadow:0 1px 10px -2px #2466fb;
+    --svtd-button-color: black;
+    --svtd-button-bg-color: transparent;
+    --svtd-border: 1px solid grey;
+    --svtd-button-box-shadow: none;
+    --svtd-bar-color: grey;
   }
 ```
