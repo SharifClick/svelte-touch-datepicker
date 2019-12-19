@@ -1,8 +1,14 @@
 <script>
   import Switcher from './Switcher.svelte';
 
+  export let date = new Date();
+  export let visible = false;
+  export let years_map = [1900, 2100];
+
+  let years_count = ((years_map[1] - years_map[0]) + 1);
+
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
-  const YEARS = new Array(201).fill(1900).map((v, i) => v + i);
+  const YEARS = new Array(years_count).fill(years_map[0]).map((v, i) => v + i);
   const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   let _date;
@@ -11,8 +17,6 @@
  
 
 
-  export let date = new Date();
-  export let visible = false;
 
   let resetDate = (event) => {
     event.stopPropagation()
