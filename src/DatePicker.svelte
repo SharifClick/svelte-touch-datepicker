@@ -4,6 +4,7 @@
   export let date = new Date();
   export let visible = false;
   export let years_map = [1900, 2100];
+  export let classes = '';
 
   let years_count = ((years_map[1] - years_map[0]) + 1);
 
@@ -106,7 +107,7 @@
   
 </style>
 
-<input type="text" readonly value={_date} on:focus={() => {visible = !visible}}>
+<input type="text" class='{classes}' readonly value={_date} on:focus={() => {visible = !visible}}>
 {#if visible}
   <div class="touch-date-popup" >
     <div>
