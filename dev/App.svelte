@@ -20,10 +20,12 @@
     --svtd-border: none;
     --svtd-button-box-shadow:0 1px 10px -2px #2466fb;
   }   */
+
+ 
   .container{
     height: 100%;
     width: 100%;
-    overscroll-behavior: none;
+    
   }
 
   .center {
