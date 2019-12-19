@@ -50,7 +50,7 @@
   right:0;
   bottom:0;
   background: rgba(0, 0, 0, 0.3);
-  overscroll-behavior: none;
+  /* overscroll-behavior: none; */
 }
 .touch-date-popup > div{
   background: var(--svtd-popup-bg-color, white);

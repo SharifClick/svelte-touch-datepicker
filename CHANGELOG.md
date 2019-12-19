@@ -8,3 +8,7 @@
 
 * bug fixes
 * allow css custom property
+
+## 1.2.0
+
+* default import support

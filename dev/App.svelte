@@ -1,5 +1,5 @@
 <script>
-  import {DatePicker}  from "../src/index.js";
+  import DatePicker  from "../src/index.js";
 
 
   let date = new Date();
@@ -23,6 +23,7 @@
   .container{
     height: 100%;
     width: 100%;
+    overscroll-behavior: none;
   }
 
   .center {
