@@ -15,7 +15,7 @@ npm i svelte-touch-datepicker
 
 ```html
 <script>
-  import DatePicker  from "svelte-touch-datepicker";
+  import DatePicker  from "svelte-touch-datepicker"; // 4.38kb gzipped
 
   let date = new Date();
   $: _date = date.toLocaleDateString("en-US");
