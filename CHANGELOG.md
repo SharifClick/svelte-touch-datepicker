@@ -16,3 +16,8 @@
 ## 1.2.1
 
 * fix pull to refresh on swipe down on mobile chrome
+
+## 1.2.2
+
+* bugfix
+* readme update
