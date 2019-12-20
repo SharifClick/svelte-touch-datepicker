@@ -64,3 +64,12 @@ npm i svelte-touch-datepicker
     --svtd-bar-color: grey;
   }
 ```
+
+## Props
+
+| Name | Type | Description | Required | Default |
+| --- | --- | --- | --- | --- |
+| `date` | `object` | default date object | yes | `new Date()` |
+| `visible` | `Boolean` | Popup visibility | No | `false` |
+| `years_map` | `Array` | Years map `[from, to]` | No | `[1900, 2100]` |
+| `classes` | `String` | custom classes to be add on input | No | `empty string` |
