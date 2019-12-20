@@ -12,3 +12,7 @@
 ## 1.2.0
 
 * default import support
+
+## 1.2.1
+
+* default import support
