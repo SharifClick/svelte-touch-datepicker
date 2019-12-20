@@ -15,4 +15,4 @@
 
 ## 1.2.1
 
-* default import support
+* fix pull to refresh on swipe down on mobile chrome
