@@ -36,7 +36,7 @@
       let day = Math.min(date.getDate(), maxDayInSelectedMonth)
       newDate = new Date(date.getFullYear(), changedData, day)
     } else if (type === 'year') {
-      let maxDayInSelectedMonth = new Date(1900 + changedData, date.getMonth() + 1, 0).getDate()
+      let maxDayInSelectedMonth = new Date(years_map[1] + changedData, date.getMonth() + 1, 0).getDate()
       let day = Math.min(date.getDate(), maxDayInSelectedMonth)
       newDate = new Date(1900 + changedData, date.getMonth(), day)
 
