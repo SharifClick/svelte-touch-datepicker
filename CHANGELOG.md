@@ -21,3 +21,7 @@
 
 * bugfix
 * readme update
+
+## 1.3
+
+* feat: wheel control for desktop

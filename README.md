@@ -1,5 +1,5 @@
-# Native like date-picker for Svelte
- 
+# Native like date-picker for Svelte (With wheel control for desktop)
+
 [![NPM version](https://img.shields.io/npm/v/svelte-touch-datepicker.svg?style=flat)](https://www.npmjs.com/package/svelte-touch-datepicker) [![NPM downloads](https://img.shields.io/npm/dm/svelte-touch-datepicker.svg?style=flat)](https://www.npmjs.com/package/svelte-touch-datepicker)
 
 
