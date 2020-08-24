@@ -82,6 +82,18 @@
     onDateChange(type, -finalPosition / 50);
   }
 
+  let onWheel = (e) => {
+    if (event.deltaY < 0)
+      {
+        position = position - 50
+      }
+      if (event.deltaY > 0)
+      {
+        position = position + 50
+      }
+    onMouseUp()
+  }
+
 
 </script>
 
@@ -135,7 +147,7 @@
 </style>
 
 
-<div class='touch-date-wrapper' on:mousedown={onMouseDown} on:touchstart={onMouseDown}>
+<div class='touch-date-wrapper' on:mousedown={onMouseDown} on:touchstart={onMouseDown} on:wheel={onWheel}>
   <ul bind:this={itemWrapper} class="touch-date-container">
    {#each data as item }
      <li>{item}</li>

@@ -387,14 +387,14 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[15] = list[i];
+    	child_ctx[16] = list[i];
     	return child_ctx;
     }
 
-    // (140:3) {#each data as item }
+    // (152:3) {#each data as item }
     function create_each_block(ctx) {
     	let li;
-    	let t_value = /*item*/ ctx[15] + "";
+    	let t_value = /*item*/ ctx[16] + "";
     	let t;
 
     	const block = {
@@ -402,14 +402,14 @@ var app = (function () {
     			li = element("li");
     			t = text(t_value);
     			attr_dev(li, "class", "svelte-ggmds2");
-    			add_location(li, file, 140, 5, 3377);
+    			add_location(li, file, 152, 5, 3606);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
     			append_dev(li, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*data*/ 1 && t_value !== (t_value = /*item*/ ctx[15] + "")) set_data_dev(t, t_value);
+    			if (dirty & /*data*/ 1 && t_value !== (t_value = /*item*/ ctx[16] + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(li);
@@ -420,7 +420,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(140:3) {#each data as item }",
+    		source: "(152:3) {#each data as item }",
     		ctx
     	});
 
@@ -448,13 +448,14 @@ var app = (function () {
     			}
 
     			attr_dev(ul, "class", "touch-date-container svelte-ggmds2");
-    			add_location(ul, file, 138, 2, 3287);
+    			add_location(ul, file, 150, 2, 3516);
     			attr_dev(div, "class", "touch-date-wrapper svelte-ggmds2");
-    			add_location(div, file, 137, 0, 3196);
+    			add_location(div, file, 149, 0, 3406);
 
     			dispose = [
     				listen_dev(div, "mousedown", /*onMouseDown*/ ctx[2], false, false, false),
-    				listen_dev(div, "touchstart", /*onMouseDown*/ ctx[2], false, false, false)
+    				listen_dev(div, "touchstart", /*onMouseDown*/ ctx[2], false, false, false),
+    				listen_dev(div, "wheel", /*onWheel*/ ctx[3], false, false, false)
     			];
     		},
     		l: function claim(nodes) {
@@ -468,7 +469,7 @@ var app = (function () {
     				each_blocks[i].m(ul, null);
     			}
 
-    			/*ul_binding*/ ctx[14](ul);
+    			/*ul_binding*/ ctx[15](ul);
     		},
     		p: function update(ctx, [dirty]) {
     			if (dirty & /*data*/ 1) {
@@ -499,7 +500,7 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     			destroy_each(each_blocks, detaching);
-    			/*ul_binding*/ ctx[14](null);
+    			/*ul_binding*/ ctx[15](null);
     			run_all(dispose);
     		}
     	};
@@ -585,6 +586,18 @@ var app = (function () {
     		onDateChange(type, -finalPosition / 50);
     	};
 
+    	let onWheel = e => {
+    		if (event.deltaY < 0) {
+    			position = position - 50;
+    		}
+
+    		if (event.deltaY > 0) {
+    			position = position + 50;
+    		}
+
+    		onMouseUp();
+    	};
+
     	const writable_props = ["selected", "data", "type"];
 
     	Object.keys($$props).forEach(key => {
@@ -598,9 +611,9 @@ var app = (function () {
     	}
 
     	$$self.$set = $$props => {
-    		if ("selected" in $$props) $$invalidate(3, selected = $$props.selected);
+    		if ("selected" in $$props) $$invalidate(4, selected = $$props.selected);
     		if ("data" in $$props) $$invalidate(0, data = $$props.data);
-    		if ("type" in $$props) $$invalidate(4, type = $$props.type);
+    		if ("type" in $$props) $$invalidate(5, type = $$props.type);
     	};
 
     	$$self.$capture_state = () => {
@@ -615,14 +628,15 @@ var app = (function () {
     			previousY,
     			onMouseDown,
     			onMouseMove,
-    			onMouseUp
+    			onMouseUp,
+    			onWheel
     		};
     	};
 
     	$$self.$inject_state = $$props => {
-    		if ("selected" in $$props) $$invalidate(3, selected = $$props.selected);
+    		if ("selected" in $$props) $$invalidate(4, selected = $$props.selected);
     		if ("data" in $$props) $$invalidate(0, data = $$props.data);
-    		if ("type" in $$props) $$invalidate(4, type = $$props.type);
+    		if ("type" in $$props) $$invalidate(5, type = $$props.type);
     		if ("position" in $$props) position = $$props.position;
     		if ("offset" in $$props) offset = $$props.offset;
     		if ("dragging" in $$props) dragging = $$props.dragging;
@@ -631,12 +645,14 @@ var app = (function () {
     		if ("onMouseDown" in $$props) $$invalidate(2, onMouseDown = $$props.onMouseDown);
     		if ("onMouseMove" in $$props) onMouseMove = $$props.onMouseMove;
     		if ("onMouseUp" in $$props) onMouseUp = $$props.onMouseUp;
+    		if ("onWheel" in $$props) $$invalidate(3, onWheel = $$props.onWheel);
     	};
 
     	return [
     		data,
     		itemWrapper,
     		onMouseDown,
+    		onWheel,
     		selected,
     		type,
     		position,
@@ -655,7 +671,7 @@ var app = (function () {
     class Switcher extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, { selected: 3, data: 0, type: 4 });
+    		init(this, options, instance, create_fragment, safe_not_equal, { selected: 4, data: 0, type: 5 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -667,11 +683,11 @@ var app = (function () {
     		const { ctx } = this.$$;
     		const props = options.props || ({});
 
-    		if (/*selected*/ ctx[3] === undefined && !("selected" in props)) {
+    		if (/*selected*/ ctx[4] === undefined && !("selected" in props)) {
     			console.warn("<Switcher> was created without expected prop 'selected'");
     		}
 
-    		if (/*type*/ ctx[4] === undefined && !("type" in props)) {
+    		if (/*type*/ ctx[5] === undefined && !("type" in props)) {
     			console.warn("<Switcher> was created without expected prop 'type'");
     		}
     	}
