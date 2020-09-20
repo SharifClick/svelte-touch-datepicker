@@ -1,18 +1,18 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
   import Switcher from './Switcher.svelte';
 
   export let date = new Date();
   export let visible = false;
   export let years_map = [1900, 2100];
   export let classes = '';
-  export let onConfirmDate = null;
-  export let onDateChange = null;
 
   let years_count = ((years_map[1] - years_map[0]) + 1);
 
   const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
   const YEARS = new Array(years_count).fill(years_map[0]).map((v, i) => v + i);
   const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const dispatch = createEventDispatcher();
 
   let _date;
   $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((v, i) => v + i);
@@ -45,10 +45,7 @@
     }
 
     date = newDate;
-
-    if (onDateChange) {
-      onDateChange(date);
-    }
+    dispatch('dateChange', {date});
   }
 </script>
 
