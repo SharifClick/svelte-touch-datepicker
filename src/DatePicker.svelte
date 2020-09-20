@@ -126,8 +126,8 @@
             visible = !visible
 
             if (onInput) {
-							onInput(date);
-						}
+              onInput(date);
+            }
            }}>Ok</button>
         </div>
       </div>
