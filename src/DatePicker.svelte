@@ -47,6 +47,11 @@
     date = newDate;
     dispatch('dateChange', {date});
   }
+  
+  function confirmDate(event){
+    visible = !visible
+    dispatch('confirmDate', {MouseEvent:event, date});
+  }
 </script>
 
 <style>
@@ -124,13 +129,7 @@
         </div>
         <div class='touch-date-reset'>
           <button on:click={resetDate}>Reset</button>
-          <button on:click={() => {
-            visible = !visible
-
-            if (onConfirmDate) {
-              onConfirmDate(date);
-            }
-           }}>Ok</button>
+          <button on:click={confirmDate}>Ok</button>
         </div>
       </div>
     </div>
