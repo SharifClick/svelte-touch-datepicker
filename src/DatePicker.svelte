@@ -5,6 +5,7 @@
   export let visible = false;
   export let years_map = [1900, 2100];
   export let classes = '';
+	export let onInput = null;
 
   let years_count = ((years_map[1] - years_map[0]) + 1);
 
@@ -121,7 +122,13 @@
         </div>
         <div class='touch-date-reset'>
           <button on:click={resetDate}>Reset</button>
-          <button on:click={() => {visible = !visible}}>Ok</button>
+          <button on:click={() => {
+            visible = !visible
+
+            if (onInput) {
+							onInput(date);
+						}
+           }}>Ok</button>
         </div>
       </div>
     </div>
