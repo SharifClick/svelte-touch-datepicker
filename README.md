@@ -47,6 +47,22 @@ npm i svelte-touch-datepicker
 
 ```
 
+## Custom events
+
+```html
+<script>
+  function callback(event) {
+    // you will find the `date` object in event.detail
+  }
+</script>
+
+<DatePicker
+  on:dateChange={callback}
+  on:confirmDate={callback2}
+/>
+
+
+```
 
 ## Default css custom properties
 
