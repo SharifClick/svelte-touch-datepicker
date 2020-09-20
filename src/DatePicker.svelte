@@ -5,7 +5,8 @@
   export let visible = false;
   export let years_map = [1900, 2100];
   export let classes = '';
-	export let onInput = null;
+  export let onConfirmDate = null;
+  export let onDateChange = null;
 
   let years_count = ((years_map[1] - years_map[0]) + 1);
 
@@ -44,6 +45,10 @@
     }
 
     date = newDate;
+
+    if (onDateChange) {
+      onDateChange(date);
+    }
   }
 </script>
 
@@ -125,8 +130,8 @@
           <button on:click={() => {
             visible = !visible
 
-            if (onInput) {
-              onInput(date);
+            if (onConfirmDate) {
+              onConfirmDate(date);
             }
            }}>Ok</button>
         </div>
