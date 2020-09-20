@@ -83,11 +83,11 @@
   }
 
   let onWheel = (e) => {
-    if (event.deltaY < 0)
+    if (e.deltaY < 0)
       {
         position = position - 50
       }
-      if (event.deltaY > 0)
+      if (e.deltaY > 0)
       {
         position = position + 50
       }
