@@ -25,3 +25,6 @@
 ## 1.3
 
 * feat: wheel control for desktop
+
+## 1.4
+* merged PR #6 and #7
