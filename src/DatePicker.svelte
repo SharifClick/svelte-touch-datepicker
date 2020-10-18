@@ -1,4 +1,68 @@
 <script>
+
+  var win = window;
+  var doc = document;
+  var dropdownId = 'searchableselect-dropdown-container';
+  let open = false;
+
+
+
+  //hoist the dropdowns into a container on the body
+  let dropdown, searchableselect, input;
+
+  let _dropdown = dropdown; // cache for later
+
+  var container = doc.getElementById(dropdownId);
+
+  if (!container) {
+    container = doc.createElement('div');
+    container.id = dropdownId;
+    container.className = 'searchableselect';
+    doc.body.appendChild(container);
+  }
+  function openBox() {
+     open = true
+      updateBounds();
+  };
+  function close() {
+    open = false;
+  };
+
+  function updateBounds() {
+
+    var bounds = searchableselect.getBoundingClientRect();
+
+    // // match dropdown width with el width
+    // dropdown.style.width = bounds.width + 'px';
+
+    // let dropdown = _dropdown;
+
+    if (open) {
+
+
+      dropdown.style.left = bounds.left + 'px';
+      var top = (bounds.bottom),
+        inht = win.innerHeight;
+      if ((top + dropdown.offsetHeight) > inht) {
+        //not enough space to render drop down below input,
+        //render it above
+        dropdown.style.bottom = (inht - (bounds.top - 3)) + 'px';
+        dropdown.style.top = 'auto';
+      } else {
+        dropdown.style.top = top + 'px';
+        dropdown.style.bottom = 'auto';
+      }
+
+    } else {
+      dropdown.style.left = '-9999px';
+    }
+  }
+
+
+
+
+
+
   import { createEventDispatcher } from 'svelte';
   import Switcher from './Switcher.svelte';
 
@@ -17,7 +81,7 @@
   let _date;
   $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((v, i) => v + i);
   $:  _date = date.toLocaleDateString("en-US");
- 
+
 
 
 
@@ -47,7 +111,7 @@
     date = newDate;
     dispatch('dateChange', {date});
   }
-  
+
   function confirmDate(event){
     visible = !visible
     dispatch('confirmDate', {MouseEvent:event, date});
@@ -112,10 +176,35 @@
 .day-line{
   margin: 2px;
 }
-  
+  #searchableselect-dropdown-container {
+    position: absolute;
+    z-index: 2000;
+  }
+
+  .dropdown {
+    position: fixed;
+    left: -9999px;
+    margin: 3px 0 0 0;
+    background: #fff;
+    color: #333;
+    border-radius: 3px;
+    padding: 2px 0;
+    cursor: default;
+    list-style: none;
+    z-index: 50;
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.4);
+    max-height: 400px;
+    overflow-y: auto;
+    display: block;
+    /* height: 500px;
+    width: 500px; */
+  }
+  .dropdown:not(.open) {
+      display: none;
+    }
 </style>
 
-<input type="text" class='{classes}' readonly value={_date} on:focus={() => {visible = !visible}}>
+<!-- <input type="text" class='{classes}' readonly value={_date} on:focus={() => {visible = !visible}}>
 {#if visible}
   <div class="touch-date-popup" >
     <div>
@@ -134,5 +223,33 @@
       </div>
     </div>
   </div>
-{/if}
+{/if} -->
+
+
+
+
+<div bind:this={searchableselect} class='searchableselect input is-shadowless'>
+
+  <input type='text' on:focus={openBox} on:blur={close}  bind:this={input}>
+
+
+  <div bind:this={dropdown} class='dropdown {open ? ' open ' : ' '}'>
+    <div class="touch-date-wrapper">
+        <div class='date-line'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
+        <p class='day-line'>{ WEEKDAY[date.getDay()] }</p>
+        <div class='touch-date-picker'>
+          <Switcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged}/>
+          <Switcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
+          <Switcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
+        </div>
+        <div class='touch-date-reset'>
+          <button on:click={resetDate}>Reset</button>
+          <button on:click={confirmDate}>Ok</button>
+        </div>
+      </div>
+  </div>
+
+
+
+</div>
 
