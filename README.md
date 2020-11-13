@@ -1,6 +1,12 @@
 # Native like date-picker for Svelte (With wheel control for desktop)
 
-[![NPM version](https://img.shields.io/npm/v/svelte-touch-datepicker.svg?style=flat)](https://www.npmjs.com/package/svelte-touch-datepicker) [![NPM downloads](https://img.shields.io/npm/dm/svelte-touch-datepicker.svg?style=flat)](https://www.npmjs.com/package/svelte-touch-datepicker)
+<p>
+  <a href="https://www.npmjs.com/package/svelte-touch-datepicker"><img  src="https://img.shields.io/npm/v/svelte-touch-datepicker?style=for-the-badge"/></a>
+  <a href="https://www.npmjs.com/package/svelte-touch-datepicker">
+    <img src="https://img.shields.io/npm/dm/svelte-touch-datepicker?style=for-the-badge"/>
+  </a>
+  <a href="https://svelte.dev"><img  src="https://img.shields.io/badge/svelte-v3-blueviolet?style=for-the-badge"/></a>
+</p>
 
 
 ## 🚀[See it in Action](https://sharifclick.github.io/svelte-touch-datepicker/)
