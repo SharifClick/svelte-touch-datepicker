@@ -14,15 +14,14 @@
   const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const dispatch = createEventDispatcher();
 
-  let _date;
+  let _date, popup;
   $: DAYS = new Array( new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() ).fill(1).map((v, i) => v + i);
   $:  _date = date.toLocaleDateString("en-US");
- 
 
 
 
-  let resetDate = (event) => {
-    event.stopPropagation()
+
+  let resetDate = () => {
     date = new Date();
   }
 
@@ -47,10 +46,16 @@
     date = newDate;
     dispatch('dateChange', {date});
   }
-  
+
   function confirmDate(event){
     visible = !visible
     dispatch('confirmDate', {MouseEvent:event, date});
+  }
+
+  function clickedOutside(event){
+    if(event.target == popup){
+      visible = false
+    }
   }
 </script>
 
@@ -112,12 +117,11 @@
 .day-line{
   margin: 2px;
 }
-  
 </style>
 
 <input type="text" class='{classes}' readonly value={_date} on:focus={() => {visible = !visible}}>
 {#if visible}
-  <div class="touch-date-popup" >
+  <div class="touch-date-popup" on:click={clickedOutside} bind:this={popup}>
     <div>
       <div class="touch-date-wrapper">
         <div class='date-line'>{ date.getDate() } { MONTHS[date.getMonth()] } { date.getFullYear() }</div>
@@ -128,8 +132,8 @@
           <Switcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
         </div>
         <div class='touch-date-reset'>
-          <button on:click={resetDate}>Reset</button>
-          <button on:click={confirmDate}>Ok</button>
+          <button on:click|stopPropagation={resetDate}>Reset</button>
+          <button on:click|stopPropagation={confirmDate}>Ok</button>
         </div>
       </div>
     </div>
