@@ -1,1 +1,2 @@
-export {default }  from './DatePicker.svelte';
+import DatePicker from './DatePicker.svelte'
+export default DatePicker ;
