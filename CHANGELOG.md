@@ -28,3 +28,6 @@
 
 ## 1.4
 * merged PR #6 and #7
+
+## 1.4.1
+* workout issue #8
