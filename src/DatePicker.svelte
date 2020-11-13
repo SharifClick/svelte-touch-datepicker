@@ -105,7 +105,7 @@
   box-shadow: var(--svtd-button-box-shadow, none) ;
   font-weight: 300;
 }
-.touch-date-reset button:nth-child(1):active {
+.touch-date-reset button:active {
   -webkit-transform: scale(0.95);
           transform: scale(0.95);
 }
