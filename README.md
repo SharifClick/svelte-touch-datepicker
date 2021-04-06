@@ -14,7 +14,7 @@
 ## Installation
 
 ```bash
-npm i svelte-touch-datepicker
+npm i -D svelte-touch-datepicker
 ```
 
 ## Usage
