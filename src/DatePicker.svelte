@@ -129,7 +129,7 @@
         <div class='touch-date-picker'>
           <Switcher type='day' data={DAYS} selected={date.getDate()} on:dateChange={dateChanged}/>
           <Switcher type='month' data={MONTHS} selected={date.getMonth() + 1} on:dateChange={dateChanged}/>
-          <Switcher type='year' data={YEARS} selected={date.getYear() + 1} on:dateChange={dateChanged}/>
+          <Switcher type='year' data={YEARS} selected={date.getYear()} on:dateChange={dateChanged}/>
         </div>
         <div class='touch-date-reset'>
           <button on:click|stopPropagation={resetDate}>Reset</button>
